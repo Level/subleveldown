@@ -112,9 +112,24 @@ SubDown.prototype.repair = function() {
   return this.leveldown.repair.apply(this.leveldown, arguments)
 }
 
+var extend = function(xopts, opts) {
+  xopts.keys = opts.keys
+  xopts.values = opts.values
+  xopts.createIfMissing = opts.createIfMissing
+  xopts.errorIfExists = opts.errorIfExists
+  xopts.keyEncoding = opts.keyEncoding
+  xopts.valueEncoding = opts.valueEncoding
+  xopts.compression = opts.compression
+  xopts.db = opts.db
+  xopts.limit = opts.limit
+  xopts.keyAsBuffer = opts.keyAsBuffer
+  xopts.valueAsBuffer = opts.valueAsBuffer
+  return opts
+}
+
 SubDown.prototype.iterator = function(opts) {
-  opts = wrap(opts, this._wrap)
-  return new SubIterator(this.leveldown.iterator(opts), this.prefix)
+  var xopts = extend(wrap(opts, this._wrap), opts)
+  return new SubIterator(this.leveldown.iterator(xopts), this.prefix)
 }
 
 module.exports = SubDown
