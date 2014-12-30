@@ -2,6 +2,10 @@ var util = require('util')
 var abstract = require('abstract-leveldown')
 var wrap = require('level-option-wrap')
 
+var concat = function(prefix, key) {
+  return Buffer.isBuffer(key) ? Buffer.concat([new Buffer(prefix), key]) : prefix+key
+}
+
 var SubIterator = function(ite, prefix) {
   this.iterator = ite
   this.prefix = prefix
@@ -36,10 +40,10 @@ var SubDown = function(db, prefix, separator) {
 
   this._wrap = {
     gt: function(x) {
-      return self.prefix+(x || '')
+      return concat(self.prefix, (x || ''))
     },
     lt: function(x) {
-      return self.prefix+(x || '\xff')
+      return concat(self.prefix, (x || '\xff'))
     }
   }
 
@@ -73,15 +77,15 @@ SubDown.prototype.setDb = function() {
 }
 
 SubDown.prototype.put = function(key, value, opts, cb) {
-  this.leveldown.put(this.prefix+key, value, opts, cb)
+  this.leveldown.put(concat(this.prefix, key), value, opts, cb)
 }
 
 SubDown.prototype.get = function(key, opts, cb) {
-  this.leveldown.get(this.prefix+key, opts, cb)
+  this.leveldown.get(concat(this.prefix, key), opts, cb)
 }
 
 SubDown.prototype.del = function(key, opts, cb) {
-  this.leveldown.del(this.prefix+key, opts, cb)
+  this.leveldown.del(concat(this.prefix, key), opts, cb)
 }
 
 SubDown.prototype.batch = SubDown.prototype._batch = function(operations, opts, cb) {
@@ -90,7 +94,7 @@ SubDown.prototype.batch = SubDown.prototype._batch = function(operations, opts, 
   var subops = new Array(operations.length)
   for (var i = 0; i < operations.length; i++) {
     var o = operations[i]
-    subops[i] = {type:o.type, key:this.prefix+o.key, value:o.value}
+    subops[i] = {type:o.type, key:concat(this.prefix, o.key), value:o.value}
   }
 
   this.leveldown.batch(operations, opts, cb)
