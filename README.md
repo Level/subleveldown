@@ -6,6 +6,8 @@ Sublevels implemented using leveldowns
 npm install subleveldown
 ```
 
+[![build status](http://img.shields.io/travis/mafintosh/subleveldown.svg?style=flat)](http://travis-ci.org/mafintosh/subleveldown)
+
 ## Usage
 
 ``` js
@@ -25,6 +27,13 @@ test.put('hello', 'world', function() {
   })
 })
 ```
+
+## API
+
+#### `subdb = sub(db, [prefix], [options])`
+
+Returns a levelup instance that uses the subleveldown with `prefix`.
+The `options` argument is passed to the [levelup](https://github.com/rvagg/node-levelup) constructor
 
 ## License
 
