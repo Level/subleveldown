@@ -3,7 +3,9 @@ var abstract = require('abstract-leveldown')
 var wrap = require('level-option-wrap')
 
 var concat = function(prefix, key) {
-  return Buffer.isBuffer(key) ? Buffer.concat([new Buffer(prefix), key]) : prefix+key
+  if (typeof key === 'string' && key.length) return prefix+key
+  if (Buffer.isBuffer(key) && key.length) return Buffer.concat([new Buffer(prefix), key])
+  return key
 }
 
 var SubIterator = function(ite, prefix) {
@@ -88,8 +90,10 @@ SubDown.prototype.del = function(key, opts, cb) {
   this.leveldown.del(concat(this.prefix, key), opts, cb)
 }
 
-SubDown.prototype.batch = SubDown.prototype._batch = function(operations, opts, cb) {
+SubDown.prototype.batch =
+SubDown.prototype._batch = function(operations, opts, cb) {
   if (arguments.length === 0) return new abstract.AbstractChainedBatch(this)
+  if (!Array.isArray(operations)) return this.leveldown.batch.apply(null, arguments)
 
   var subops = new Array(operations.length)
   for (var i = 0; i < operations.length; i++) {
@@ -97,7 +101,7 @@ SubDown.prototype.batch = SubDown.prototype._batch = function(operations, opts, 
     subops[i] = {type:o.type, key:concat(this.prefix, o.key), value:o.value}
   }
 
-  this.leveldown.batch(operations, opts, cb)
+  this.leveldown.batch(subops, opts, cb)
 }
 
 SubDown.prototype.approximateSize = function(start, end, cb) {
@@ -128,11 +132,17 @@ var extend = function(xopts, opts) {
   xopts.limit = opts.limit
   xopts.keyAsBuffer = opts.keyAsBuffer
   xopts.valueAsBuffer = opts.valueAsBuffer
-  return opts
+  xopts.reverse = opts.reverse
+  return xopts
+}
+
+var fixRange = function(opts) {
+  return (!opts.reverse || (!opts.end && !opts.start)) ? opts : {start:opts.end, end:opts.start}
 }
 
 SubDown.prototype.iterator = function(opts) {
-  var xopts = extend(wrap(opts, this._wrap), opts)
+  if (!opts) opts = {}
+  var xopts = extend(wrap(fixRange(opts), this._wrap), opts)
   return new SubIterator(this.leveldown.iterator(xopts), this.prefix)
 }
 
