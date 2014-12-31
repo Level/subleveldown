@@ -2,6 +2,7 @@ var subdown = require('./subdown')
 var levelup = require('levelup')
 
 module.exports = function(db, prefix, opts) {
+  if (typeof prefix === 'object' && !opts) return module.exports(db, null, prefix)
   if (!opts) opts = {}
 
   opts.db = function() {

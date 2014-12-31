@@ -27,7 +27,7 @@ SubIterator.prototype.end = function(cb) {
 }
 
 var SubDown = function(db, prefix, separator) {
-  if (!(this instanceof SubDown)) return new SubDown(db, prefix)
+  if (!(this instanceof SubDown)) return new SubDown(db, prefix, separator)
 
   if (!prefix) prefix = ''
   if (!separator) separator = '!'
