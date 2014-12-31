@@ -1,7 +1,8 @@
 var sub = require('./')
-var memdb = require('memdb')
+var levelup = require('levelup')
+var memdown = require('memdown')
 
-var db = memdb()
+var db = levelup('test', {db:memdown})
 
 var test = sub(db, 'test', {valueEncoding:'utf-8'})
 var test2 = sub(test, 'tester', {valueEncoding:'utf-8'})
