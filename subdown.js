@@ -2,9 +2,10 @@ var util = require('util')
 var abstract = require('abstract-leveldown')
 var wrap = require('level-option-wrap')
 
-var concat = function(prefix, key) {
-  if (typeof key === 'string' && key.length) return prefix+key
-  if (Buffer.isBuffer(key) && key.length) return Buffer.concat([new Buffer(prefix), key])
+var concat = function(prefix, key, len) {
+  if (!len) len = key.length
+  if (typeof key === 'string' && len) return prefix+key
+  if (Buffer.isBuffer(key) && len) return Buffer.concat([new Buffer(prefix), key])
   return key
 }
 
@@ -42,10 +43,10 @@ var SubDown = function(db, prefix, separator) {
 
   this._wrap = {
     gt: function(x) {
-      return concat(self.prefix, (x || ''))
+      return concat(self.prefix, x || '', 1)
     },
     lt: function(x) {
-      return concat(self.prefix, (x || '\xff'))
+      return concat(self.prefix, x || '\xff', 1)
     }
   }
 
