@@ -1,4 +1,4 @@
-var subdown = require('./subdown')
+var subdown = require('./leveldown')
 var levelup = require('levelup')
 
 module.exports = function(db, prefix, opts) {

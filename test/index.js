@@ -1,6 +1,6 @@
 var test = require('tape')
 var memdown = require('memdown')
-var subdown = require('../subdown')
+var subdown = require('../leveldown')
 var levelup = require('levelup')
 var testCommon = require('./common')
 var testBuffer = new Buffer('this-is-test-data')
