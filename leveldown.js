@@ -62,7 +62,7 @@ SubDown.prototype.type = 'subdown'
 SubDown.prototype._open = function(opts, cb) {
   if (this.db.isOpen()) {
     if (this.db.db.type === 'subdown' && this.db.db.prefix) {
-      this.prefix = this.db.db.prefix.slice(0, -1) + this.prefix
+      this.prefix = this.db.db.prefix + this.prefix
       this.leveldown = this.db.db.leveldown
     } else {
       this.leveldown = this.db.db
