@@ -28,8 +28,12 @@ SubIterator.prototype.end = function(cb) {
   this.iterator.end(cb)
 }
 
-var SubDown = function(db, prefix, separator) {
-  if (!(this instanceof SubDown)) return new SubDown(db, prefix, separator)
+var SubDown = function(db, prefix, opts) {
+  if (!(this instanceof SubDown)) return new SubDown(db, prefix, opts)
+  if (typeof opts === 'string') opts = {separator: opts}
+  if (!opts) opts = {}
+
+  var separator = opts.separator
 
   if (!prefix) prefix = ''
   if (!separator) separator = '!'
@@ -39,6 +43,7 @@ var SubDown = function(db, prefix, separator) {
   this.db = db
   this.leveldown = null
   this.prefix = separator+prefix+separator
+  this._beforeOpen = opts.open
 
   var self = this
 
@@ -60,6 +65,8 @@ util.inherits(SubDown, abstract.AbstractLevelDOWN)
 SubDown.prototype.type = 'subdown'
 
 SubDown.prototype._open = function(opts, cb) {
+  var self = this
+
   if (this.db.isOpen()) {
     if (this.db.db.type === 'subdown' && this.db.db.prefix) {
       this.prefix = this.db.db.prefix + this.prefix
@@ -67,10 +74,15 @@ SubDown.prototype._open = function(opts, cb) {
     } else {
       this.leveldown = this.db.db
     }
-    return cb()
+    return done()
   }
 
-  this.db.on('open', this.open.bind(this, opts, cb))
+  this.db.on('open', this.open.bind(this, opts, done))
+
+  function done (err) {
+    if (err || !self._beforeOpen) return cb(err)
+    self._beforeOpen(cb)
+  }
 }
 
 SubDown.prototype.close = function() {
