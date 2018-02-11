@@ -2,20 +2,24 @@ var util = require('util')
 var abstract = require('abstract-leveldown')
 var wrap = require('level-option-wrap')
 
-var END = new Buffer([0xff])
+var END = Buffer.from([0xff])
 
 var concat = function (prefix, key, force) {
   if (typeof key === 'string' && (force || key.length)) return prefix + key
-  if (Buffer.isBuffer(key) && (force || key.length)) return Buffer.concat([new Buffer(prefix), key])
+  if (Buffer.isBuffer(key) && (force || key.length)) return Buffer.concat([Buffer.from(prefix), key])
   return key
 }
 
 var SubIterator = function (ite, prefix) {
   this.iterator = ite
   this.prefix = prefix
+
+  abstract.AbstractIterator.call(this)
 }
 
-SubIterator.prototype.next = function (cb) {
+util.inherits(SubIterator, abstract.AbstractIterator)
+
+SubIterator.prototype._next = function (cb) {
   var self = this
   this.iterator.next(cb && function (err, key, value) {
     if (err) return cb(err)
@@ -24,7 +28,7 @@ SubIterator.prototype.next = function (cb) {
   })
 }
 
-SubIterator.prototype.end = function (cb) {
+SubIterator.prototype._end = function (cb) {
   this.iterator.end(cb)
 }
 
@@ -85,27 +89,22 @@ SubDown.prototype._open = function (opts, cb) {
   }
 }
 
-SubDown.prototype.close = function () {
+SubDown.prototype._close = function () {
   this.leveldown.close.apply(this.leveldown, arguments)
 }
 
-SubDown.prototype.setDb = function () {
-  this.leveldown.setDb.apply(this.leveldown, arguments)
-}
-
-SubDown.prototype.put = function (key, value, opts, cb) {
+SubDown.prototype._put = function (key, value, opts, cb) {
   this.leveldown.put(concat(this.prefix, key), value, opts, cb)
 }
 
-SubDown.prototype.get = function (key, opts, cb) {
+SubDown.prototype._get = function (key, opts, cb) {
   this.leveldown.get(concat(this.prefix, key), opts, cb)
 }
 
-SubDown.prototype.del = function (key, opts, cb) {
+SubDown.prototype._del = function (key, opts, cb) {
   this.leveldown.del(concat(this.prefix, key), opts, cb)
 }
 
-SubDown.prototype.batch =
 SubDown.prototype._batch = function (operations, opts, cb) {
   if (arguments.length === 0) return new abstract.AbstractChainedBatch(this)
   if (!Array.isArray(operations)) return this.leveldown.batch.apply(null, arguments)
@@ -117,22 +116,6 @@ SubDown.prototype._batch = function (operations, opts, cb) {
   }
 
   this.leveldown.batch(subops, opts, cb)
-}
-
-SubDown.prototype.approximateSize = function (start, end, cb) {
-  this.leveldown.approximateSize.apply(this.leveldown, arguments)
-}
-
-SubDown.prototype.getProperty = function () {
-  return this.leveldown.getProperty.apply(this.leveldown, arguments)
-}
-
-SubDown.prototype.destroy = function () {
-  return this.leveldown.destroy.apply(this.leveldown, arguments)
-}
-
-SubDown.prototype.repair = function () {
-  return this.leveldown.repair.apply(this.leveldown, arguments)
 }
 
 var extend = function (xopts, opts) {
@@ -155,7 +138,7 @@ var fixRange = function (opts) {
   return (!opts.reverse || (!opts.end && !opts.start)) ? opts : {start: opts.end, end: opts.start}
 }
 
-SubDown.prototype.iterator = function (opts) {
+SubDown.prototype._iterator = function (opts) {
   if (!opts) opts = {}
   var xopts = extend(wrap(fixRange(opts), this._wrap), opts)
   return new SubIterator(this.leveldown.iterator(xopts), this.prefix)
