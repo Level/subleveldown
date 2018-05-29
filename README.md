@@ -7,6 +7,7 @@ npm install subleveldown
 ```
 
 [![Travis](http://img.shields.io/travis/Level/subleveldown.svg?style=flat)](http://travis-ci.org/Level/subleveldown)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 ## Usage
 

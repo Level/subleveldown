@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "memdown": "^1.1.0",
-    "standard": "^5.3.1",
+    "standard": "^11.0.1",
     "tape": "^4.9.0"
   },
   "repository": {

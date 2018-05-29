@@ -2,11 +2,13 @@ var util = require('util')
 var abstract = require('abstract-leveldown')
 var wrap = require('level-option-wrap')
 
-var END = new Buffer([0xff])
+var END = Buffer.from([0xff])
 
 var concat = function (prefix, key, force) {
   if (typeof key === 'string' && (force || key.length)) return prefix + key
-  if (Buffer.isBuffer(key) && (force || key.length)) return Buffer.concat([new Buffer(prefix), key])
+  if (Buffer.isBuffer(key) && (force || key.length)) {
+    return Buffer.concat([Buffer.from(prefix), key])
+  }
   return key
 }
 
