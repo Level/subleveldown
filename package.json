@@ -11,7 +11,7 @@
   "devDependencies": {
     "memdown": "^1.1.0",
     "standard": "^5.3.1",
-    "tape": "^4.2.2"
+    "tape": "^4.9.0"
   },
   "repository": {
     "type": "git",
