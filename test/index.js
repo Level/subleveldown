@@ -3,7 +3,7 @@ var memdown = require('memdown')
 var subdown = require('../leveldown')
 var levelup = require('levelup')
 var testCommon = require('./common')
-var testBuffer = new Buffer('this-is-test-data')
+var testBuffer = Buffer.from('this-is-test-data')
 
 require('abstract-leveldown/abstract/open-test').args(down, test, testCommon)
 require('abstract-leveldown/abstract/open-test').open(down, test, testCommon)
