@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "abstract-leveldown": "2.4.1",
+    "inherits": "^2.0.3",
     "level-option-wrap": "^1.1.0",
     "levelup": "^1.2.1"
   },

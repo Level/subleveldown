@@ -1,4 +1,4 @@
-var util = require('util')
+var inherits = require('inherits')
 var abstract = require('abstract-leveldown')
 var wrap = require('level-option-wrap')
 
@@ -62,7 +62,7 @@ var SubDown = function (db, prefix, opts) {
   abstract.AbstractLevelDOWN.call(this, 'no-location')
 }
 
-util.inherits(SubDown, abstract.AbstractLevelDOWN)
+inherits(SubDown, abstract.AbstractLevelDOWN)
 
 SubDown.prototype.type = 'subdown'
 
