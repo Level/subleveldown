@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mafintosh/subleveldown.git"
+    "url": "https://github.com/level/subleveldown.git"
   },
   "author": "Mathias Buus (@mafintosh)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mafintosh/subleveldown/issues"
+    "url": "https://github.com/level/subleveldown/issues"
   },
-  "homepage": "https://github.com/mafintosh/subleveldown",
+  "homepage": "https://github.com/level/subleveldown",
   "directories": {
     "test": "test"
   },
