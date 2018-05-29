@@ -6,7 +6,7 @@ Sublevels implemented using leveldowns
 npm install subleveldown
 ```
 
-[![build status](http://img.shields.io/travis/mafintosh/subleveldown.svg?style=flat)](http://travis-ci.org/mafintosh/subleveldown)
+[![Travis](http://img.shields.io/travis/Level/subleveldown.svg?style=flat)](http://travis-ci.org/Level/subleveldown)
 
 ## Usage
 
