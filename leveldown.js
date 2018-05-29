@@ -15,9 +15,13 @@ var concat = function (prefix, key, force) {
 var SubIterator = function (ite, prefix) {
   this.iterator = ite
   this.prefix = prefix
+
+  abstract.AbstractIterator.call(this)
 }
 
-SubIterator.prototype.next = function (cb) {
+inherits(SubIterator, abstract.AbstractIterator)
+
+SubIterator.prototype._next = function (cb) {
   var self = this
   this.iterator.next(cb && function (err, key, value) {
     if (err) return cb(err)
@@ -26,7 +30,7 @@ SubIterator.prototype.next = function (cb) {
   })
 }
 
-SubIterator.prototype.end = function (cb) {
+SubIterator.prototype._end = function (cb) {
   this.iterator.end(cb)
 }
 
