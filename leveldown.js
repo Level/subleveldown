@@ -91,27 +91,27 @@ SubDown.prototype._open = function (opts, cb) {
   }
 }
 
-SubDown.prototype.close = function () {
+SubDown.prototype._close = function () {
   this.leveldown.close.apply(this.leveldown, arguments)
 }
 
+// TODO to be removed once upgrading to latest levelup (or level or level-packager)
 SubDown.prototype.setDb = function () {
   this.leveldown.setDb.apply(this.leveldown, arguments)
 }
 
-SubDown.prototype.put = function (key, value, opts, cb) {
+SubDown.prototype._put = function (key, value, opts, cb) {
   this.leveldown.put(concat(this.prefix, key), value, opts, cb)
 }
 
-SubDown.prototype.get = function (key, opts, cb) {
+SubDown.prototype._get = function (key, opts, cb) {
   this.leveldown.get(concat(this.prefix, key), opts, cb)
 }
 
-SubDown.prototype.del = function (key, opts, cb) {
+SubDown.prototype._del = function (key, opts, cb) {
   this.leveldown.del(concat(this.prefix, key), opts, cb)
 }
 
-SubDown.prototype.batch =
 SubDown.prototype._batch = function (operations, opts, cb) {
   if (arguments.length === 0) return new abstract.AbstractChainedBatch(this)
   if (!Array.isArray(operations)) return this.leveldown.batch.apply(null, arguments)
@@ -125,10 +125,12 @@ SubDown.prototype._batch = function (operations, opts, cb) {
   this.leveldown.batch(subops, opts, cb)
 }
 
+// TODO to be removed once upgrading to latest abstract-leveldown
 SubDown.prototype.approximateSize = function (start, end, cb) {
   this.leveldown.approximateSize.apply(this.leveldown, arguments)
 }
 
+// TODO to be removed once upgrading to latest abstract-leveldown
 SubDown.prototype.getProperty = function () {
   return this.leveldown.getProperty.apply(this.leveldown, arguments)
 }
@@ -153,7 +155,7 @@ var fixRange = function (opts) {
   return (!opts.reverse || (!opts.end && !opts.start)) ? opts : {start: opts.end, end: opts.start}
 }
 
-SubDown.prototype.iterator = function (opts) {
+SubDown.prototype._iterator = function (opts) {
   if (!opts) opts = {}
   var xopts = extend(wrap(fixRange(opts), this._wrap), opts)
   return new SubIterator(this.leveldown.iterator(xopts), this.prefix)
