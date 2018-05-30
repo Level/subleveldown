@@ -133,14 +133,6 @@ SubDown.prototype.getProperty = function () {
   return this.leveldown.getProperty.apply(this.leveldown, arguments)
 }
 
-SubDown.prototype.destroy = function () {
-  return this.leveldown.destroy.apply(this.leveldown, arguments)
-}
-
-SubDown.prototype.repair = function () {
-  return this.leveldown.repair.apply(this.leveldown, arguments)
-}
-
 var extend = function (xopts, opts) {
   xopts.keys = opts.keys
   xopts.values = opts.values
