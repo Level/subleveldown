@@ -105,6 +105,22 @@ test('SubDb main function', function (t) {
       })
     })
   })
+  t.test('wrap a closed levelup and re-open levelup', function (t) {
+    t.plan(3)
+    var db = levelup('loc', {db: memdown})
+    db.once('open', function () {
+      db.close(function (err) {
+        t.error(err, 'no error')
+        var sub = subdb(db, 'test')
+        sub.once('open', function () {
+          t.pass('subdb openen')
+        })
+        db.open(function (err) {
+          t.error(err, 'no error')
+        })
+      })
+    })
+  })
 })
 
 function down (loc) {
