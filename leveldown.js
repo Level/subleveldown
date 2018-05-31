@@ -83,7 +83,8 @@ SubDown.prototype._open = function (opts, cb) {
     return done()
   }
 
-  this.db.on('open', this.open.bind(this, opts, done))
+  this.db.once('open', this.open.bind(this, opts, done))
+  this.db.open()
 
   function done (err) {
     if (err || !self._beforeOpen) return cb(err)
