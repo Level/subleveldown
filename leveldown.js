@@ -4,7 +4,7 @@ var wrap = require('level-option-wrap')
 
 var END = Buffer.from([0xff])
 
-var concat = function (prefix, key, force) {
+function concat (prefix, key, force) {
   if (typeof key === 'string' && (force || key.length)) return prefix + key
   if (Buffer.isBuffer(key) && (force || key.length)) {
     return Buffer.concat([Buffer.from(prefix), key])
@@ -12,7 +12,7 @@ var concat = function (prefix, key, force) {
   return key
 }
 
-var SubIterator = function (ite, prefix) {
+function SubIterator (ite, prefix) {
   this.iterator = ite
   this.prefix = prefix
 
@@ -34,7 +34,7 @@ SubIterator.prototype._end = function (cb) {
   this.iterator.end(cb)
 }
 
-var SubDown = function (db, prefix, opts) {
+function SubDown (db, prefix, opts) {
   if (!(this instanceof SubDown)) return new SubDown(db, prefix, opts)
   if (typeof opts === 'string') opts = {separator: opts}
   if (!opts) opts = {}
@@ -119,7 +119,7 @@ SubDown.prototype._batch = function (operations, opts, cb) {
   this.leveldown.batch(subops, opts, cb)
 }
 
-var extend = function (xopts, opts) {
+function extend (xopts, opts) {
   xopts.keys = opts.keys
   xopts.values = opts.values
   xopts.createIfMissing = opts.createIfMissing
@@ -135,7 +135,7 @@ var extend = function (xopts, opts) {
   return xopts
 }
 
-var fixRange = function (opts) {
+function fixRange (opts) {
   return (!opts.reverse || (!opts.end && !opts.start)) ? opts : {start: opts.end, end: opts.start}
 }
 
