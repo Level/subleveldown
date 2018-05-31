@@ -23,7 +23,7 @@ inherits(SubIterator, abstract.AbstractIterator)
 
 SubIterator.prototype._next = function (cb) {
   var self = this
-  this.iterator.next(cb && function (err, key, value) {
+  this.iterator.next(function (err, key, value) {
     if (err) return cb(err)
     if (key) key = key.slice(self.prefix.length)
     cb.apply(null, arguments)
