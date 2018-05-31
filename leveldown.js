@@ -99,11 +99,6 @@ SubDown.prototype._close = function () {
   this.leveldown.close.apply(this.leveldown, arguments)
 }
 
-// TODO to be removed once upgrading to latest levelup (or level or level-packager)
-SubDown.prototype.setDb = function () {
-  this.leveldown.setDb.apply(this.leveldown, arguments)
-}
-
 SubDown.prototype._put = function (key, value, opts, cb) {
   this.leveldown.put(concat(this.prefix, key), value, opts, cb)
 }
