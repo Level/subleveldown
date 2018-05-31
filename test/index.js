@@ -1,5 +1,6 @@
 var test = require('tape')
 var memdown = require('memdown')
+var encoding = require('encoding-down')
 var subdown = require('../leveldown')
 var subdb = require('..')
 var levelup = require('levelup')
@@ -64,25 +65,26 @@ test('SubDown constructor', function (t) {
 test('SubDb main function', function (t) {
   t.test('opts.open hook', function (t) {
     t.plan(1)
-    subdb(levelup('loc', {db: memdown}), 'test', {
+    subdb(levelup(memdown('loc')), 'test', {
       open: function (cb) {
         t.pass('opts.open called')
       }
     })
   })
   t.test('levelup *down is set to subdown which has correct storage', function (t) {
-    var db = levelup('loc', {db: memdown})
+    var db = levelup(memdown('loc'))
     var sub = subdb(db, 'test')
     sub.once('open', function () {
-      t.is(sub.db instanceof subdown, true, 'is subdown instance')
-      t.is(sub.db.type, 'subleveldown', '.type is subleveldown')
-      t.is(sub.db.leveldown instanceof memdown, true, 'memdown')
+      t.is(sub.db instanceof encoding, true, 'is encoding-down instance')
+      t.is(sub.db.db instanceof subdown, true, 'is subdown instance')
+      t.is(sub.db.db.type, 'subleveldown', '.type is subleveldown')
+      t.is(sub.db.db.leveldown instanceof memdown, true, 'memdown')
       t.end()
     })
   })
   t.test('different sub levels can have different encodings', function (t) {
     t.plan(6)
-    var db = levelup('loc', {db: memdown})
+    var db = levelup(memdown('loc'))
     var sub1 = subdb(db, 'test1', {
       valueEncoding: 'json'
     })
@@ -107,7 +109,7 @@ test('SubDb main function', function (t) {
   })
   t.test('wrap a closed levelup and re-open levelup', function (t) {
     t.plan(3)
-    var db = levelup('loc', {db: memdown})
+    var db = levelup(memdown('loc'))
     db.once('open', function () {
       db.close(function (err) {
         t.error(err, 'no error')
@@ -122,14 +124,17 @@ test('SubDb main function', function (t) {
     })
   })
   t.test('wrapping a sub level', function (t) {
-    var db = levelup('loc', {db: memdown})
+    var db = levelup(memdown('loc'))
     var sub1 = subdb(db, 'test1')
     var sub2 = subdb(sub1, 'test2')
     sub2.once('open', function () {
-      t.is(sub1.db.prefix, '!test1!')
-      t.is(sub2.db.prefix, '!test1!!test2!')
-      t.is(sub2.db.type, 'subleveldown', '.type is subleveldown')
-      t.is(sub2.db.leveldown instanceof memdown, true, 'memdown')
+      t.is(sub1.db instanceof encoding, true, 'sub1 encoding-down')
+      t.is(sub1.db.db.prefix, '!test1!', 'sub1 prefix ok')
+      t.is(sub1.db.db.leveldown instanceof memdown, true, 'memdown')
+      t.is(sub2.db instanceof encoding, true, 'sub2 encoding-down')
+      t.is(sub2.db.db.prefix, '!test1!!test2!', 'sub2 prefix ok')
+      t.is(sub2.db.db.type, 'subleveldown', '.type is subleveldown')
+      t.is(sub2.db.db.leveldown instanceof memdown, true, 'memdown')
       t.end()
     })
   })

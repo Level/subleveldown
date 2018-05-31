@@ -74,12 +74,15 @@ SubDown.prototype._open = function (opts, cb) {
   var self = this
 
   if (this.db.isOpen()) {
-    if (this.db.db.type === 'subleveldown' && this.db.db.prefix) {
-      this.prefix = this.db.db.prefix + this.prefix
-      this.leveldown = this.db.db.leveldown
+    var subdb = down(this.db, 'subleveldown')
+
+    if (subdb && subdb.prefix) {
+      this.prefix = subdb.prefix + this.prefix
+      this.leveldown = down(subdb.db)
     } else {
-      this.leveldown = this.db.db
+      this.leveldown = down(this.db)
     }
+
     return done()
   }
 
@@ -163,3 +166,20 @@ SubDown.prototype._iterator = function (opts) {
 }
 
 module.exports = SubDown
+
+function down (db, type) {
+  if (typeof db.down === 'function') return db.down(type)
+  if (type && db.type === type) return db
+  if (isAbstract(db.db)) return down(db.db, type)
+  if (isAbstract(db._db)) return down(db._db, type)
+  return type ? null : db
+}
+
+function isAbstract (db) {
+  if (!db || typeof db !== 'object') { return false }
+  return Object.keys(abstract.AbstractLevelDOWN.prototype).filter(function (name) {
+    return name[0] !== '_'
+  }).every(function (name) {
+    return typeof db[name] === 'function'
+  })
+}
