@@ -124,16 +124,6 @@ SubDown.prototype._batch = function (operations, opts, cb) {
   this.leveldown.batch(subops, opts, cb)
 }
 
-// TODO to be removed once upgrading to latest abstract-leveldown
-SubDown.prototype.approximateSize = function (start, end, cb) {
-  this.leveldown.approximateSize.apply(this.leveldown, arguments)
-}
-
-// TODO to be removed once upgrading to latest abstract-leveldown
-SubDown.prototype.getProperty = function () {
-  return this.leveldown.getProperty.apply(this.leveldown, arguments)
-}
-
 var extend = function (xopts, opts) {
   xopts.keys = opts.keys
   xopts.values = opts.values
