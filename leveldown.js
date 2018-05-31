@@ -140,7 +140,6 @@ function fixRange (opts) {
 }
 
 SubDown.prototype._iterator = function (opts) {
-  if (!opts) opts = {}
   var xopts = extend(wrap(fixRange(opts), this._wrap), opts)
   return new SubIterator(this.leveldown.iterator(xopts), this.prefix)
 }
