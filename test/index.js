@@ -1,7 +1,7 @@
 var test = require('tape')
 var memdown = require('memdown')
 var subdown = require('../leveldown')
-// var subdb = require('..')
+var subdb = require('..')
 var levelup = require('levelup')
 var testCommon = require('./common')
 
@@ -17,7 +17,6 @@ require('abstract-leveldown/abstract/close-test').close(down, test, testCommon)
 require('abstract-leveldown/abstract/iterator-test').all(down, test, testCommon)
 require('abstract-leveldown/abstract/iterator-range-test').all(down, test, testCommon)
 
-/*
 test('SubDown constructor', function (t) {
   t.test('can be called without new', function (t) {
     var sub = subdown()
@@ -135,7 +134,6 @@ test('SubDb main function', function (t) {
     })
   })
 })
-*/
 
 function down (loc) {
   return subdown(levelup(memdown()), 'test')
