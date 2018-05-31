@@ -4,13 +4,13 @@
   "description": "sublevels implemented using leveldowns",
   "main": "index.js",
   "dependencies": {
-    "abstract-leveldown": "2.4.1",
+    "abstract-leveldown": "^5.0.0",
     "inherits": "^2.0.3",
     "level-option-wrap": "^1.1.0",
-    "levelup": "^1.2.1"
+    "levelup": "^3.0.1"
   },
   "devDependencies": {
-    "memdown": "^1.1.0",
+    "memdown": "^3.0.0",
     "standard": "^11.0.1",
     "tape": "^4.9.0"
   },
