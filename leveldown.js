@@ -90,8 +90,8 @@ SubDown.prototype._open = function (opts, cb) {
   })
 }
 
-SubDown.prototype._close = function () {
-  this.leveldown.close.apply(this.leveldown, arguments)
+SubDown.prototype._close = function (cb) {
+  this.leveldown.close(cb)
 }
 
 SubDown.prototype._put = function (key, value, opts, cb) {
