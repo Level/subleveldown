@@ -68,13 +68,13 @@ var SubDown = function (db, prefix, opts) {
 
 inherits(SubDown, abstract.AbstractLevelDOWN)
 
-SubDown.prototype.type = 'subdown'
+SubDown.prototype.type = 'subleveldown'
 
 SubDown.prototype._open = function (opts, cb) {
   var self = this
 
   if (this.db.isOpen()) {
-    if (this.db.db.type === 'subdown' && this.db.db.prefix) {
+    if (this.db.db.type === 'subleveldown' && this.db.db.prefix) {
       this.prefix = this.db.db.prefix + this.prefix
       this.leveldown = this.db.db.leveldown
     } else {
