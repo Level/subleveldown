@@ -76,6 +76,7 @@ test('SubDb main function', function (t) {
     var sub = subdb(db, 'test')
     sub.once('open', function () {
       t.is(sub.db instanceof subdown, true, 'is subdown instance')
+      t.is(sub.db.type, 'subleveldown', '.type is subleveldown')
       t.is(sub.db.leveldown instanceof memdown, true, 'memdown')
       t.end()
     })
@@ -119,6 +120,18 @@ test('SubDb main function', function (t) {
           t.error(err, 'no error')
         })
       })
+    })
+  })
+  t.test('wrapping a sub level', function (t) {
+    var db = levelup('loc', {db: memdown})
+    var sub1 = subdb(db, 'test1')
+    var sub2 = subdb(sub1, 'test2')
+    sub2.once('open', function () {
+      t.is(sub1.db.prefix, '!test1!')
+      t.is(sub2.db.prefix, '!test1!!test2!')
+      t.is(sub2.db.type, 'subleveldown', '.type is subleveldown')
+      t.is(sub2.db.leveldown instanceof memdown, true, 'memdown')
+      t.end()
     })
   })
 })
