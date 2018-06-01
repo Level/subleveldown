@@ -73,31 +73,25 @@ SubDown.prototype.type = 'subleveldown'
 SubDown.prototype._open = function (opts, cb) {
   var self = this
 
-  if (this.db.isOpen()) {
-    if (this.db.db.type === 'subleveldown' && this.db.db.prefix) {
-      this.prefix = this.db.db.prefix + this.prefix
-      this.leveldown = this.db.db.leveldown
+  this.db.open(function (err) {
+    if (err) return cb(err)
+
+    var subdb = down(self.db, 'subleveldown')
+
+    if (subdb && subdb.prefix) {
+      self.prefix = subdb.prefix + self.prefix
+      self.leveldown = down(subdb.db)
     } else {
-      this.leveldown = this.db.db
+      self.leveldown = down(self.db)
     }
-    return done()
-  }
 
-  this.db.on('open', this.open.bind(this, opts, done))
-
-  function done (err) {
-    if (err || !self._beforeOpen) return cb(err)
-    self._beforeOpen(cb)
-  }
+    if (self._beforeOpen) self._beforeOpen(cb)
+    else cb()
+  })
 }
 
 SubDown.prototype._close = function () {
   this.leveldown.close.apply(this.leveldown, arguments)
-}
-
-// TODO to be removed once upgrading to latest levelup (or level or level-packager)
-SubDown.prototype.setDb = function () {
-  this.leveldown.setDb.apply(this.leveldown, arguments)
 }
 
 SubDown.prototype._put = function (key, value, opts, cb) {
@@ -123,16 +117,6 @@ SubDown.prototype._batch = function (operations, opts, cb) {
   }
 
   this.leveldown.batch(subops, opts, cb)
-}
-
-// TODO to be removed once upgrading to latest abstract-leveldown
-SubDown.prototype.approximateSize = function (start, end, cb) {
-  this.leveldown.approximateSize.apply(this.leveldown, arguments)
-}
-
-// TODO to be removed once upgrading to latest abstract-leveldown
-SubDown.prototype.getProperty = function () {
-  return this.leveldown.getProperty.apply(this.leveldown, arguments)
 }
 
 var extend = function (xopts, opts) {
@@ -162,3 +146,20 @@ SubDown.prototype._iterator = function (opts) {
 }
 
 module.exports = SubDown
+
+function down (db, type) {
+  if (typeof db.down === 'function') return db.down(type)
+  if (type && db.type === type) return db
+  if (isAbstract(db.db)) return down(db.db, type)
+  if (isAbstract(db._db)) return down(db._db, type)
+  return type ? null : db
+}
+
+function isAbstract (db) {
+  if (!db || typeof db !== 'object') { return false }
+  return Object.keys(abstract.AbstractLevelDOWN.prototype).filter(function (name) {
+    return name[0] !== '_'
+  }).every(function (name) {
+    return typeof db[name] === 'function'
+  })
+}
