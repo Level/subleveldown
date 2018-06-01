@@ -73,27 +73,21 @@ SubDown.prototype.type = 'subleveldown'
 SubDown.prototype._open = function (opts, cb) {
   var self = this
 
-  if (this.db.isOpen()) {
-    var subdb = down(this.db, 'subleveldown')
+  this.db.open(function (err) {
+    if (err) return cb(err)
+
+    var subdb = down(self.db, 'subleveldown')
 
     if (subdb && subdb.prefix) {
-      this.prefix = subdb.prefix + this.prefix
-      this.leveldown = down(subdb.db)
+      self.prefix = subdb.prefix + self.prefix
+      self.leveldown = down(subdb.db)
     } else {
-      this.leveldown = down(this.db)
+      self.leveldown = down(self.db)
     }
 
-    return done()
-  }
-
-  this.db.once('open', this.open.bind(this, opts, done))
-
-  if (this.db.isClosed()) this.db.open()
-
-  function done (err) {
-    if (err || !self._beforeOpen) return cb(err)
-    self._beforeOpen(cb)
-  }
+    if (self._beforeOpen) self._beforeOpen(cb)
+    else cb()
+  })
 }
 
 SubDown.prototype._close = function () {
