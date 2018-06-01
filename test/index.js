@@ -65,14 +65,14 @@ test('SubDown constructor', function (t) {
 test('SubDb main function', function (t) {
   t.test('opts.open hook', function (t) {
     t.plan(1)
-    subdb(levelup(memdown('loc')), 'test', {
+    subdb(levelup(memdown()), 'test', {
       open: function (cb) {
         t.pass('opts.open called')
       }
     })
   })
   t.test('levelup *down is set to subdown which has correct storage', function (t) {
-    var db = levelup(memdown('loc'))
+    var db = levelup(memdown())
     var sub = subdb(db, 'test')
     sub.once('open', function () {
       t.is(sub.db instanceof encoding, true, 'is encoding-down instance')
@@ -84,7 +84,7 @@ test('SubDb main function', function (t) {
   })
   t.test('different sub levels can have different encodings', function (t) {
     t.plan(6)
-    var db = levelup(memdown('loc'))
+    var db = levelup(memdown())
     var sub1 = subdb(db, 'test1', {
       valueEncoding: 'json'
     })
@@ -109,7 +109,7 @@ test('SubDb main function', function (t) {
   })
   t.test('wrap a closed levelup and re-open levelup', function (t) {
     t.plan(3)
-    var db = levelup(memdown('loc'))
+    var db = levelup(memdown())
     db.once('open', function () {
       db.close(function (err) {
         t.error(err, 'no error')
@@ -124,7 +124,7 @@ test('SubDb main function', function (t) {
     })
   })
   t.test('wrapping a sub level', function (t) {
-    var db = levelup(memdown('loc'))
+    var db = levelup(memdown())
     var sub1 = subdb(db, 'test1')
     var sub2 = subdb(sub1, 'test2')
     sub2.once('open', function () {
