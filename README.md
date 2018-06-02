@@ -10,6 +10,18 @@
 [![npm](https://img.shields.io/npm/dm/subleveldown.svg)](https://www.npmjs.com/package/subleveldown)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
+## Table of Contents
+
+<details><summary>Click to expand</summary>
+
+- [Usage](#usage)
+- [Background](#background)
+- [API](#api)
+- [Install](#install)
+- [License](#license)
+
+</details>
+
 ## Usage
 
 **If you are upgrading:** please see [UPGRADING.md](UPGRADING.md).
