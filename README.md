@@ -42,7 +42,7 @@ test.put('hello', 'world', function() {
 
 ### `subdb = sub(db, [prefix], [opts])`
 
-Returns a `levelup` instance that uses subleveldown with `prefix` on top of the underlying *down of `db`. Each sublevel is a `levelup` of its own which can have specific encodings.
+Returns a `levelup` instance that uses subleveldown with `prefix` on top of the underlying \*down of `db`. Each sublevel is a `levelup` of its own which can have specific encodings.
 
 In other words, it's possible to have e.g. one sublevel with Buffer keys and values and another sublevel with `'utf-8'` encoded keys and `json` encoded values.
 
