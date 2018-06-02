@@ -30,5 +30,8 @@
   },
   "scripts": {
     "test": "standard && node test"
+  },
+  "engines": {
+    "node": ">=6"
   }
 }
