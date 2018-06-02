@@ -10,6 +10,8 @@
 [![npm](https://img.shields.io/npm/dm/subleveldown.svg)](https://www.npmjs.com/package/subleveldown)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
+**If you are upgrading:** please see [UPGRADING.md](UPGRADING.md).
+
 ## Install
 
 ```
