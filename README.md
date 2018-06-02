@@ -55,7 +55,7 @@ The `opts` argument is passed along to the underlying [`levelup`][levelup] and [
 
 ## License
 
-MIT
+MIT © 2014-present [Mathias Buus](https://github.com/mafintosh) and [contributors](https://github.com/Level/subleveldown/graphs/contributors). See the included [LICENSE](./LICENSE.md) file for more details.
 
 [level-badge]: http://leveldb.org/img/badge.svg
 [levelup]: https://github.com/level/levelup
