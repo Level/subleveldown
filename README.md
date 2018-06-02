@@ -45,7 +45,7 @@ sub(db, 'two', { keyEncoding: 'binary' })
 
 There is one limitation, however: keys must *encode to* either strings or Buffers. This is not likely to affect you, unless you use custom encodings or the `id` encoding (which bypasses encodings and thus makes it your responsibility to ensure keys are either strings or Buffers).
 
-Authored by [@mafintosh](https://github.com/mafintosh) and inspired by [`level-sublevel`][level-sublevel] by [@dominictarr](https://github.com/dominictarr), `subleveldown` has become an official part of [Level][level-org]. As `level-sublevel` is no longer under active development, we highly recommend switching to `subleveldown` to get the latest and greatest of the Level ecosystem.
+Authored by [@mafintosh](https://github.com/mafintosh) and inspired by [`level-sublevel`][level-sublevel] by [@dominictarr](https://github.com/dominictarr), `subleveldown` has become an official part of [Level][level-org]. As `level-sublevel` is no longer under active development, we recommend switching to `subleveldown` to get the latest and greatest of the Level ecosystem. These two modules largely offer the same functionality, except for [hooks](https://github.com/dominictarr/level-sublevel#hooks) and [per-batch prefixes](https://github.com/dominictarr/level-sublevel#batches).
 
 ## API
 
