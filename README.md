@@ -1,6 +1,6 @@
 # subleveldown
 
-> Sub levels on top of [`levelup`][levelup] with different encodings for each sub level.
+> Sublevels on top of [`levelup`][levelup] with different encodings for each sublevel.
 
 [![level badge][level-badge]](https://github.com/level/awesome)
 [![npm](https://img.shields.io/npm/v/subleveldown.svg)](https://www.npmjs.com/package/subleveldown)
@@ -40,13 +40,13 @@ test.put('hello', 'world', function() {
 
 ### `subdb = sub(db, [prefix], [opts])`
 
-Returns a `levelup` instance that uses subleveldown with `prefix` on top of the underlying *down of `db`. Each sub level is a `levelup` of its own which can have specific encodings.
+Returns a `levelup` instance that uses subleveldown with `prefix` on top of the underlying *down of `db`. Each sublevel is a `levelup` of its own which can have specific encodings.
 
-In other words, it's possible to have e.g. one sub level with Buffer keys and values and another sub level with `'utf-8'` encoded keys and `json` encoded values.
+In other words, it's possible to have e.g. one sublevel with Buffer keys and values and another sublevel with `'utf-8'` encoded keys and `json` encoded values.
 
 The optional `opts` parameter have the following `subleveldown` specific properties:
 
-* `opts.separator` *(string, default: `'!'`)* Character for separating sub levels
+* `opts.separator` *(string, default: `'!'`)* Character for separating sublevels
 * `opts.open` *(function)* Optional open hook called when the underlying `levelup` instance has been opened
 
 The `opts` argument is passed along to the underlying [`levelup`][levelup] and [`encoding-down`][encoding-down] constructors. See their documentation for further details.
