@@ -48,8 +48,8 @@ In other words, it's possible to have e.g. one sublevel with Buffer keys and val
 
 The optional `opts` parameter has the following `subleveldown` specific properties:
 
-* `opts.separator` *(string, default: `'!'`)* Character for separating sublevels
-* `opts.open` *(function)* Optional open hook called when the underlying `levelup` instance has been opened. The hook has the signature `hook(cb)`, the callback must be called to finish opening
+* `separator` *(string, default: `'!'`)* Character for separating sublevels
+* `open` *(function)* Optional open hook called when the underlying `levelup` instance has been opened. The hook has the signature `hook(cb)`, the callback must be called to finish opening
 
 The `opts` argument is passed along to the underlying [`levelup`][levelup] and [`encoding-down`][encoding-down] constructors. See their documentation for further details.
 
