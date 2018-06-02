@@ -13,7 +13,7 @@
 * `SubIterator` should inherit from `AbstractIterator` (@ralphtheninja)
 * Use underscore methods to properly override (@ralphtheninja)
 * Change `SubDown#type` from `subdown` to `subleveldown` (@ralphtheninja)
-* Rewrite `SubDown#_open` to handle any inner *downs (@ralphtheninja)
+* Rewrite `SubDown#_open` to handle any inner \*downs (@ralphtheninja)
 * Update sublevel specific tests to handle `levelup` + `encoding-down` (@ralphtheninja)
 * Update README style with badges etc (@ralphtheninja)
 
