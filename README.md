@@ -51,7 +51,7 @@ Authored by [@mafintosh](https://github.com/mafintosh) and inspired by [`level-s
 
 ### `subdb = sub(db[, prefix][, options])`
 
-Returns a `levelup` instance that uses subleveldown to prefix the keys of the underlying store of `db`. The required `db` parameter must be a `levelup` instance. Any layers that this instance may have (like `encoding-down` or `subleveldown` itself) are peeled off to get to the innermost [`abstract-leveldown`][abstract-leveldown] compliant store (like `leveldown`).
+Returns a `levelup` instance that uses subleveldown to prefix the keys of the underlying store of `db`. The required `db` parameter must be a `levelup` instance. Any layers that this instance may have (like `encoding-down` or `subleveldown` itself) are peeled off to get to the innermost [`abstract-leveldown`][abstract-leveldown] compliant store (like `leveldown`). This ensures there is no double encoding step.
 
 The `prefix` must be a string. If omitted, the effective prefix is two separators, e.g. `'!!'`. If `db` is already a subleveldown-powered instance, the effective prefix is a combined prefix, e.g. `'!one!two!'`.
 
