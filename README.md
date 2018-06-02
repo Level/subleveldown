@@ -44,7 +44,7 @@ Returns a `levelup` instance that uses subleveldown with `prefix` on top of the 
 
 In other words, it's possible to have e.g. one sublevel with Buffer keys and values and another sublevel with `'utf-8'` encoded keys and `json` encoded values.
 
-The optional `opts` parameter have the following `subleveldown` specific properties:
+The optional `opts` parameter has the following `subleveldown` specific properties:
 
 * `opts.separator` *(string, default: `'!'`)* Character for separating sublevels
 * `opts.open` *(function)* Optional open hook called when the underlying `levelup` instance has been opened
