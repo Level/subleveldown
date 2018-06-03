@@ -1,6 +1,6 @@
 The MIT License (MIT)
 
-Copyright (c) 2014 Mathias Buus
+Copyright (c) 2014-present Mathias Buus and contributors as listed here: https://github.com/Level/subleveldown/graphs/contributors.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
