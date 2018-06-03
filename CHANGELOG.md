@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [v3.0.0-rc1]
+
 ### Changed
 * Upgrade `levelup` from `^1.2.1` to `^3.0.1` (@ralphtheninja)
 * Upgrade `abstract-leveldown` from `^2.4.1` to `^5.0.0` (@ralphtheninja)
@@ -100,7 +102,8 @@
 
 :seedling: Initial release.
 
-[Unreleased]: https://github.com/level/subleveldown/compare/v2.1.0...HEAD
+[Unreleased]: https://github.com/level/subleveldown/compare/v3.0.0-rc1...HEAD
+[3.0.0-rc1]: https://github.com/level/subleveldown/compare/v2.1.0...v3.0.0-rc1
 [2.1.0]: https://github.com/level/subleveldown/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/level/subleveldown/compare/v1.1.0...v2.0.0
 [1.1.0]: https://github.com/level/subleveldown/compare/v1.0.6...v1.1.0
