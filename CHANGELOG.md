@@ -16,6 +16,7 @@
 * Rewrite `SubDown#_open` to handle any inner \*downs (@ralphtheninja)
 * Update sublevel specific tests to handle `levelup` + `encoding-down` (@ralphtheninja)
 * Update README style with badges etc (@ralphtheninja)
+* Tweak README style further (@vweevers)
 
 ### Added
 * Depend on `encoding-down` for encoding logic (@ralphtheninja)
@@ -26,6 +27,7 @@
 * Test wrapping a closed `levelup` and re-opening it (@ralphtheninja)
 * Test nested sublevels (@ralphtheninja)
 * Add temporary `down()` and `isAbstract()` functions (@ralphtheninja)
+* Add `UPGRADING.md` (@ralphtheninja)
 
 ### Removed
 * Remove node 0.12 from Travis (@ralphtheninja)
