@@ -15,8 +15,7 @@
 * Change `SubDown#type` from `subdown` to `subleveldown` (@ralphtheninja)
 * Rewrite `SubDown#_open` to handle any inner \*downs (@ralphtheninja)
 * Update sublevel specific tests to handle `levelup` + `encoding-down` (@ralphtheninja)
-* Update README style with badges etc (@ralphtheninja)
-* Tweak README style further (@vweevers)
+* Update README (@ralphtheninja, @vweevers)
 
 ### Added
 * Depend on `encoding-down` for encoding logic (@ralphtheninja)
