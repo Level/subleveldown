@@ -162,7 +162,7 @@ test('SubDb main function', function (t) {
     t.plan(1)
     var db = levelup(memdown())
     var sub = subdb(db, 'test', { keyEncoding: 'binary' })
-    var key = Buffer.from('foo')
+    var key = Buffer.from('00ff', 'hex')
     sub.once('open', function () {
       sub.put(key, 'bar', function () {
         db.createReadStream().on('data', function (r) {
