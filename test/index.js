@@ -158,6 +158,19 @@ test('SubDb main function', function (t) {
       })
     })
   })
+  t.test('concatenating Buffer keys', function (t) {
+    t.plan(1)
+    var db = levelup(memdown())
+    var sub = subdb(db, 'test', { keyEncoding: 'binary' })
+    var key = Buffer.from('foo')
+    sub.once('open', function () {
+      sub.put(key, 'bar', function () {
+        db.createReadStream().on('data', function (r) {
+          t.deepEqual(r.key, Buffer.concat([Buffer.from('!test!'), key]))
+        })
+      })
+    })
+  })
 })
 
 function down (loc) {
