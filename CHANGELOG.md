@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-## [v3.0.0-rc1]
+## [3.0.0-rc1]
 
 ### Changed
 * Upgrade `levelup` from `^1.2.1` to `^3.0.1` (@ralphtheninja)
