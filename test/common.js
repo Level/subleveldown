@@ -18,7 +18,7 @@ function lastLocation () {
 }
 
 function cleanup (callback) {
-  callback()
+  process.nextTick(callback)
 }
 
 function setUp (t) {
