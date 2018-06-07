@@ -6,8 +6,7 @@ module.exports = {
   lastLocation: lastLocation,
   setUp: setUp,
   tearDown: tearDown,
-  collectEntries: collectEntries,
-  makeExistingDbTest: makeExistingDbTest
+  collectEntries: collectEntries
 }
 
 function location () {
@@ -49,33 +48,4 @@ function collectEntries (iterator, callback) {
       process.nextTick(next)
     })
   }
-}
-
-function makeExistingDbTest (name, test, leveldown, testFn) {
-  test(name, function (t) {
-    cleanup(function () {
-      var loc = location()
-      var db = leveldown(loc)
-
-      db.open(function (err) {
-        t.notOk(err, 'no error from open()')
-        db.batch([
-          {type: 'put', key: 'one', value: '1'},
-          {type: 'put', key: 'two', value: '2'},
-          {type: 'put', key: 'three', value: '3'}
-        ], function (err) {
-          t.notOk(err, 'no error from batch()')
-          testFn(db, t, done, loc)
-        })
-      })
-
-      function done (close) {
-        if (close === false) return cleanup(t.end.bind(t))
-        db.close(function (err) {
-          t.notOk(err, 'no error from close()')
-          cleanup(t.end.bind(t))
-        })
-      }
-    })
-  })
 }
