@@ -138,6 +138,26 @@ test('SubDb main function', function (t) {
       t.end()
     })
   })
+  t.test('iterator options are forwarded (issue #1)', function (t) {
+    t.plan(4)
+    var enc = { keyEncoding: 'utf8', valueEncoding: 'json' }
+    var db = levelup(encoding(memdown(), enc))
+    var sub = subdb(db, 'test', enc)
+    var key = 'foo'
+    var value = { hello: 'world' }
+    sub.once('open', function () {
+      sub.put(key, value, function () {
+        db.createReadStream().on('data', function (r) {
+          t.is(r.key, '!test!' + key, 'db key is utf8')
+          t.deepEqual(r.value, value, 'db value is json')
+        })
+        sub.createReadStream().on('data', function (r) {
+          t.is(r.key, key, 'sub db key is utf8')
+          t.deepEqual(r.value, value, 'db value is json')
+        })
+      })
+    })
+  })
 })
 
 function down (loc) {
