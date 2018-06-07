@@ -2,7 +2,19 @@
 
 ## [Unreleased]
 
-## [3.0.0-rc1]
+## [3.0.0] - 2018-06-07
+
+### Added
+* Test that iterator options are forwarded (@ralphtheninja)
+* Test concatenating Buffer keys (@ralphtheninja)
+
+### Changed
+* Call `cleanup()` cb synchronously (@ralphtheninja)
+
+### Removed
+* Remove `makeExistingDbTest()` from `test/common.js` (@ralphtheninja)
+
+## [3.0.0-rc1] - 2018-06-03
 
 ### Changed
 * Upgrade `levelup` from `^1.2.1` to `^3.0.1` (@ralphtheninja)
@@ -102,7 +114,8 @@
 
 :seedling: Initial release.
 
-[Unreleased]: https://github.com/level/subleveldown/compare/v3.0.0-rc1...HEAD
+[Unreleased]: https://github.com/level/subleveldown/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/level/subleveldown/compare/v3.0.0-rc1...v3.0.0
 [3.0.0-rc1]: https://github.com/level/subleveldown/compare/v2.1.0...v3.0.0-rc1
 [2.1.0]: https://github.com/level/subleveldown/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/level/subleveldown/compare/v1.1.0...v2.0.0
