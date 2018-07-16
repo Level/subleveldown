@@ -71,6 +71,7 @@ test('SubDb main function', function (t) {
       }
     })
   })
+
   t.test('levelup *down is set to subdown which has correct storage', function (t) {
     var db = levelup(memdown())
     var sub = subdb(db, 'test')
@@ -82,6 +83,7 @@ test('SubDb main function', function (t) {
       t.end()
     })
   })
+
   t.test('different sub levels can have different encodings', function (t) {
     t.plan(6)
     var db = levelup(memdown())
@@ -107,6 +109,7 @@ test('SubDb main function', function (t) {
       })
     })
   })
+
   t.test('wrap a closed levelup and re-open levelup', function (t) {
     t.plan(3)
     var db = levelup(memdown())
@@ -123,6 +126,7 @@ test('SubDb main function', function (t) {
       })
     })
   })
+
   t.test('wrapping a sub level', function (t) {
     var db = levelup(memdown())
     var sub1 = subdb(db, 'test1')
@@ -138,6 +142,7 @@ test('SubDb main function', function (t) {
       t.end()
     })
   })
+
   t.test('iterator options are forwarded (issue #1)', function (t) {
     t.plan(4)
     var enc = { keyEncoding: 'utf8', valueEncoding: 'json' }
@@ -158,6 +163,7 @@ test('SubDb main function', function (t) {
       })
     })
   })
+
   t.test('concatenating Buffer keys', function (t) {
     t.plan(1)
     var db = levelup(memdown())
@@ -170,6 +176,13 @@ test('SubDb main function', function (t) {
         })
       })
     })
+  })
+
+  t.test('subdb with no prefix', function (t) {
+    t.plan(1)
+    var db = levelup(memdown())
+    var sub = subdb(db, { valueEncoding: 'json' })
+    t.equal(sub.db._db.db.prefix, '!!')
   })
 })
 
