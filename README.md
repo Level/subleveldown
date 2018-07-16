@@ -8,6 +8,7 @@
 [![Travis](https://img.shields.io/travis/Level/subleveldown.svg?style=flat)](http://travis-ci.org/Level/subleveldown)
 [![dependencies](https://img.shields.io/david/Level/subleveldown.svg)](https://david-dm.org/level/subleveldown)
 [![npm](https://img.shields.io/npm/dm/subleveldown.svg)](https://www.npmjs.com/package/subleveldown)
+[![Coverage Status](https://coveralls.io/repos/github/Level/subleveldown/badge.svg)](https://coveralls.io/github/Level/subleveldown)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 ## Table of Contents

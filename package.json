@@ -11,7 +11,9 @@
     "levelup": "^3.0.1"
   },
   "devDependencies": {
+    "coveralls": "^3.0.2",
     "memdown": "^3.0.0",
+    "nyc": "^12.0.2",
     "standard": "^11.0.1",
     "tape": "^4.9.0"
   },
@@ -29,7 +31,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "standard && node test"
+    "test": "standard && nyc node test",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "engines": {
     "node": ">=6"
