@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+## [3.0.1] - 2018-07-27
+
+### Added
+* Add `nyc` and `coveralls` (@ralphtheninja)
+
+### Removed
+* Remove node 9 (@ralphtheninja)
+
+### Fixed
+* Pass on `fillCache` option to `SubIterator` (@Nocory)
+
 ## [3.0.0] - 2018-06-07
 
 ### Added
@@ -114,7 +125,8 @@
 
 :seedling: Initial release.
 
-[Unreleased]: https://github.com/level/subleveldown/compare/v3.0.0...HEAD
+[Unreleased]: https://github.com/level/subleveldown/compare/v3.0.1...HEAD
+[3.0.1]: https://github.com/level/subleveldown/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/level/subleveldown/compare/v3.0.0-rc1...v3.0.0
 [3.0.0-rc1]: https://github.com/level/subleveldown/compare/v2.1.0...v3.0.0-rc1
 [2.1.0]: https://github.com/level/subleveldown/compare/v2.0.0...v2.1.0
