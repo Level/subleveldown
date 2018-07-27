@@ -132,6 +132,7 @@ function extend (xopts, opts) {
   xopts.keyAsBuffer = opts.keyAsBuffer
   xopts.valueAsBuffer = opts.valueAsBuffer
   xopts.reverse = opts.reverse
+  xopts.fillCache = opts.fillCache
   return xopts
 }
 
