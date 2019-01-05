@@ -85,7 +85,7 @@ npm i subleveldown -S
 
 ## License
 
-MIT © 2014-present [Mathias Buus](https://github.com/mafintosh) and [contributors](https://github.com/Level/subleveldown/graphs/contributors). See the included [LICENSE](./LICENSE.md) file for more details.
+[MIT](LICENSE.md) © 2014-present [Mathias Buus](https://github.com/mafintosh) and [Contributors](CONTRIBUTORS.md).
 
 [level-badge]: http://leveldb.org/img/badge.svg
 [levelup]: https://github.com/level/levelup
