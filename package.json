@@ -2,7 +2,16 @@
   "name": "subleveldown",
   "version": "3.0.1",
   "description": "sublevels implemented using leveldowns",
+  "author": "Mathias Buus (@mafintosh)",
+  "license": "MIT",
   "main": "index.js",
+  "scripts": {
+    "test": "standard && nyc node test",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
+  },
+  "directories": {
+    "test": "test"
+  },
   "dependencies": {
     "abstract-leveldown": "^5.0.0",
     "encoding-down": "^5.0.3",
@@ -21,18 +30,9 @@
     "type": "git",
     "url": "https://github.com/level/subleveldown.git"
   },
-  "author": "Mathias Buus (@mafintosh)",
-  "license": "MIT",
+  "homepage": "https://github.com/level/subleveldown",
   "bugs": {
     "url": "https://github.com/level/subleveldown/issues"
-  },
-  "homepage": "https://github.com/level/subleveldown",
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "test": "standard && nyc node test",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "engines": {
     "node": ">=6"
