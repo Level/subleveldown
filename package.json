@@ -6,8 +6,9 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "test": "standard && nyc node test",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "test": "standard && hallmark && nyc node test",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "hallmark": "hallmark --fix"
   },
   "directories": {
     "test": "test"
