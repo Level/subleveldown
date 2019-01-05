@@ -19,6 +19,7 @@
 - [Background](#background)
 - [API](#api)
 - [Install](#install)
+- [Contributing](#contributing)
 - [License](#license)
 
 </details>
@@ -27,7 +28,7 @@
 
 **If you are upgrading:** please see [UPGRADING.md](UPGRADING.md).
 
-``` js
+```js
 var sub = require('subleveldown')
 var level = require('level')
 
@@ -47,7 +48,7 @@ test.put('hello', 'world', function() {
 
 ## Background
 
-`subleveldown` separates a [`levelup`][levelup] database into sections - or *sublevels* from here on out. Think SQL tables, but evented, ranged and realtime!
+`subleveldown` separates a [`levelup`][levelup] database into sections - or _sublevels_ from here on out. Think SQL tables, but evented, ranged and realtime!
 
 Each sublevel is a `levelup` of its own. This means it has the exact same interface as its parent database, but its own keyspace and [events](https://github.com/Level/levelup#events). In addition, sublevels are individually wrapped with [`encoding-down`][encoding-down], giving us per-sublevel encodings. For example, it's possible to have one sublevel with Buffer keys and another with `'utf8'` encoded keys. The same goes for values. Like so:
 
@@ -56,7 +57,7 @@ sub(db, 'one', { valueEncoding: 'json' })
 sub(db, 'two', { keyEncoding: 'binary' })
 ```
 
-There is one limitation, however: keys must *encode to* either strings or Buffers. This is not likely to affect you, unless you use custom encodings or the `id` encoding (which bypasses encodings and thus makes it your responsibility to ensure keys are either strings or Buffers).
+There is one limitation, however: keys must _encode to_ either strings or Buffers. This is not likely to affect you, unless you use custom encodings or the `id` encoding (which bypasses encodings and thus makes it your responsibility to ensure keys are either strings or Buffers).
 
 Authored by [@mafintosh](https://github.com/mafintosh) and inspired by [`level-sublevel`][level-sublevel] by [@dominictarr](https://github.com/dominictarr), `subleveldown` has become an official part of [Level][level-org]. As `level-sublevel` is no longer under active development, we recommend switching to `subleveldown` to get the latest and greatest of the Level ecosystem. These two modules largely offer the same functionality, except for [hooks](https://github.com/dominictarr/level-sublevel#hooks) and [per-batch prefixes](https://github.com/dominictarr/level-sublevel#batches).
 
@@ -70,8 +71,8 @@ The `prefix` must be a string. If omitted, the effective prefix is two separator
 
 The optional `options` parameter has the following `subleveldown` specific properties:
 
-* `separator` *(string, default: `'!'`)* Character for separating sublevel prefixes from user keys and each other. Should be outside the character (or byte) range of user keys.
-* `open` *(function)* Optional open hook called when the underlying `levelup` instance has been opened. The hook receives a callback which must be called to finish opening.
+- `separator` _(string, default: `'!'`)_ Character for separating sublevel prefixes from user keys and each other. Should be outside the character (or byte) range of user keys.
+- `open` _(function)_ Optional open hook called when the underlying `levelup` instance has been opened. The hook receives a callback which must be called to finish opening.
 
 Any other `options` are passed along to the underlying [`levelup`][levelup] and [`encoding-down`][encoding-down] constructors. See their documentation for further details.
 
@@ -83,13 +84,26 @@ With [npm](https://npmjs.org) do:
 npm i subleveldown -S
 ```
 
+## Contributing
+
+[`Level/subleveldown`](https://github.com/Level/subleveldown) is an **OPEN Open Source Project**. This means that:
+
+> Individuals making significant and valuable contributions are given commit-access to the project to contribute as they see fit. This project is more like an open wiki than a standard guarded open source project.
+
+See the [Contribution Guide](https://github.com/Level/community/blob/master/CONTRIBUTING.md) for more details.
+
 ## License
 
-MIT © 2014-present [Mathias Buus](https://github.com/mafintosh) and [contributors](https://github.com/Level/subleveldown/graphs/contributors). See the included [LICENSE](./LICENSE.md) file for more details.
+[MIT](LICENSE.md) © 2014-present [Mathias Buus](https://github.com/mafintosh) and [Contributors](CONTRIBUTORS.md).
 
 [level-badge]: http://leveldb.org/img/badge.svg
+
 [levelup]: https://github.com/level/levelup
+
 [encoding-down]: https://github.com/level/encoding-down
+
 [abstract-leveldown]: https://github.com/level/abstract-leveldown
+
 [level-sublevel]: https://github.com/dominictarr/level-sublevel
+
 [level-org]: https://github.com/Level

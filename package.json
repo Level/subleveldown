@@ -2,7 +2,17 @@
   "name": "subleveldown",
   "version": "3.0.1",
   "description": "sublevels implemented using leveldowns",
+  "author": "Mathias Buus (@mafintosh)",
+  "license": "MIT",
   "main": "index.js",
+  "scripts": {
+    "test": "standard && hallmark && nyc node test",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "hallmark": "hallmark --fix"
+  },
+  "directories": {
+    "test": "test"
+  },
   "dependencies": {
     "abstract-leveldown": "^5.0.0",
     "encoding-down": "^5.0.3",
@@ -12,28 +22,27 @@
   },
   "devDependencies": {
     "coveralls": "^3.0.2",
+    "hallmark": "^0.1.0",
+    "level-community": "^3.0.0",
     "memdown": "^3.0.0",
     "nyc": "^12.0.2",
     "standard": "^11.0.1",
     "tape": "^4.9.0"
   },
+  "hallmark": {
+    "community": "level-community"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/level/subleveldown.git"
   },
-  "author": "Mathias Buus (@mafintosh)",
-  "license": "MIT",
+  "homepage": "https://github.com/level/subleveldown",
   "bugs": {
     "url": "https://github.com/level/subleveldown/issues"
   },
-  "homepage": "https://github.com/level/subleveldown",
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "test": "standard && nyc node test",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
-  },
+  "keywords": [
+    "level"
+  ],
   "engines": {
     "node": ">=6"
   }
