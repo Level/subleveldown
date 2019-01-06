@@ -2,11 +2,10 @@
 
 > Sublevels on top of [`levelup`][levelup] with different encodings for each sublevel.
 
-[![level badge][level-badge]](https://github.com/level/awesome)
+[![level badge][level-badge]](https://github.com/Level/awesome)
 [![npm](https://img.shields.io/npm/v/subleveldown.svg?label=&logo=npm)](https://www.npmjs.com/package/subleveldown)
 [![Node version](https://img.shields.io/node/v/subleveldown.svg)](https://www.npmjs.com/package/subleveldown)
-[![Travis](https://img.shields.io/travis/Level/subleveldown.svg?style=flat)](http://travis-ci.org/Level/subleveldown)
-[![dependencies](https://img.shields.io/david/Level/subleveldown.svg)](https://david-dm.org/level/subleveldown)
+[![Travis](https://img.shields.io/travis/Level/subleveldown.svg?logo=travis&label=)](https://travis-ci.org/Level/subleveldown)
 [![npm](https://img.shields.io/npm/dm/subleveldown.svg?label=dl)](https://www.npmjs.com/package/subleveldown)
 [![Coverage Status](https://coveralls.io/repos/github/Level/subleveldown/badge.svg)](https://coveralls.io/github/Level/subleveldown)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
@@ -113,11 +112,11 @@ To sustain [`Level`](https://github.com/Level) and its activities, become a back
 
 [level-badge]: http://leveldb.org/img/badge.svg
 
-[levelup]: https://github.com/level/levelup
+[levelup]: https://github.com/Level/levelup
 
-[encoding-down]: https://github.com/level/encoding-down
+[encoding-down]: https://github.com/Level/encoding-down
 
-[abstract-leveldown]: https://github.com/level/abstract-leveldown
+[abstract-leveldown]: https://github.com/Level/abstract-leveldown
 
 [level-sublevel]: https://github.com/dominictarr/level-sublevel
 
