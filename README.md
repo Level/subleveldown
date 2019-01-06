@@ -22,6 +22,7 @@
 - [API](#api)
 - [Install](#install)
 - [Contributing](#contributing)
+- [Donate](#donate)
 - [License](#license)
 
 </details>
