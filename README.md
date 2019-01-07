@@ -2,14 +2,15 @@
 
 > Sublevels on top of [`levelup`][levelup] with different encodings for each sublevel.
 
-[![level badge][level-badge]](https://github.com/level/awesome)
-[![npm](https://img.shields.io/npm/v/subleveldown.svg)](https://www.npmjs.com/package/subleveldown)
-![Node version](https://img.shields.io/node/v/subleveldown.svg)
-[![Travis](https://img.shields.io/travis/Level/subleveldown.svg?style=flat)](http://travis-ci.org/Level/subleveldown)
-[![dependencies](https://img.shields.io/david/Level/subleveldown.svg)](https://david-dm.org/level/subleveldown)
-[![npm](https://img.shields.io/npm/dm/subleveldown.svg)](https://www.npmjs.com/package/subleveldown)
+[![level badge][level-badge]](https://github.com/Level/awesome)
+[![npm](https://img.shields.io/npm/v/subleveldown.svg?label=&logo=npm)](https://www.npmjs.com/package/subleveldown)
+[![Node version](https://img.shields.io/node/v/subleveldown.svg)](https://www.npmjs.com/package/subleveldown)
+[![Travis](https://img.shields.io/travis/Level/subleveldown.svg?logo=travis&label=)](https://travis-ci.org/Level/subleveldown)
+[![npm](https://img.shields.io/npm/dm/subleveldown.svg?label=dl)](https://www.npmjs.com/package/subleveldown)
 [![Coverage Status](https://coveralls.io/repos/github/Level/subleveldown/badge.svg)](https://coveralls.io/github/Level/subleveldown)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![Backers on Open Collective](https://opencollective.com/level/backers/badge.svg?color=orange)](#backers)
+[![Sponsors on Open Collective](https://opencollective.com/level/sponsors/badge.svg?color=orange)](#sponsors)
 
 ## Table of Contents
 
@@ -20,6 +21,7 @@
 - [API](#api)
 - [Install](#install)
 - [Contributing](#contributing)
+- [Donate](#donate)
 - [License](#license)
 
 </details>
@@ -92,17 +94,29 @@ npm i subleveldown -S
 
 See the [Contribution Guide](https://github.com/Level/community/blob/master/CONTRIBUTING.md) for more details.
 
+## Donate
+
+To sustain [`Level`](https://github.com/Level) and its activities, become a backer or sponsor on [Open Collective](https://opencollective.com/level). Your logo or avatar will be displayed on our 28+ [GitHub repositories](https://github.com/Level), [npm](https://www.npmjs.com/) packages and (soon) [our website](http://leveldb.org). 💖
+
+### Backers
+
+[![Open Collective backers](https://opencollective.com/level/backers.svg?width=890)](https://opencollective.com/level)
+
+### Sponsors
+
+[![Open Collective sponsors](https://opencollective.com/level/sponsors.svg?width=890)](https://opencollective.com/level)
+
 ## License
 
 [MIT](LICENSE.md) © 2014-present [Mathias Buus](https://github.com/mafintosh) and [Contributors](CONTRIBUTORS.md).
 
 [level-badge]: http://leveldb.org/img/badge.svg
 
-[levelup]: https://github.com/level/levelup
+[levelup]: https://github.com/Level/levelup
 
-[encoding-down]: https://github.com/level/encoding-down
+[encoding-down]: https://github.com/Level/encoding-down
 
-[abstract-leveldown]: https://github.com/level/abstract-leveldown
+[abstract-leveldown]: https://github.com/Level/abstract-leveldown
 
 [level-sublevel]: https://github.com/dominictarr/level-sublevel
 

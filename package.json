@@ -8,7 +8,9 @@
   "scripts": {
     "test": "standard && hallmark && nyc node test",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "hallmark": "hallmark --fix"
+    "hallmark": "hallmark --fix",
+    "dependency-check": "dependency-check . test/*.js",
+    "prepublishOnly": "npm run dependency-check"
   },
   "directories": {
     "test": "test"
@@ -22,6 +24,7 @@
   },
   "devDependencies": {
     "coveralls": "^3.0.2",
+    "dependency-check": "^3.3.0",
     "hallmark": "^0.1.0",
     "level-community": "^3.0.0",
     "memdown": "^3.0.0",
