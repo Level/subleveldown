@@ -94,6 +94,10 @@ SubDown.prototype._close = function (cb) {
   this.leveldown.close(cb)
 }
 
+SubDown.prototype._serializeKey = function (key) {
+  return Buffer.isBuffer(key) ? key : String(key)
+}
+
 SubDown.prototype._put = function (key, value, opts, cb) {
   this.leveldown.put(concat(this.prefix, key), value, opts, cb)
 }
