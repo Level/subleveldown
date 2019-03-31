@@ -107,14 +107,12 @@ SubDown.prototype._del = function (key, opts, cb) {
 }
 
 SubDown.prototype._batch = function (operations, opts, cb) {
-  var subops = new Array(operations.length)
-
+  // No need to make a copy of the array, abstract-leveldown does that
   for (var i = 0; i < operations.length; i++) {
-    var o = operations[i]
-    subops[i] = { type: o.type, key: concat(this.prefix, o.key), value: o.value }
+    operations[i].key = concat(this.prefix, operations[i].key)
   }
 
-  this.leveldown.batch(subops, opts, cb)
+  this.leveldown.batch(operations, opts, cb)
 }
 
 function extend (xopts, opts) {
