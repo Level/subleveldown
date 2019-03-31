@@ -63,7 +63,7 @@ function SubDown (db, prefix, opts) {
     }
   }
 
-  abstract.AbstractLevelDOWN.call(this, 'no-location')
+  abstract.AbstractLevelDOWN.call(this)
 }
 
 inherits(SubDown, abstract.AbstractLevelDOWN)
