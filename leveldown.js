@@ -107,10 +107,8 @@ SubDown.prototype._del = function (key, opts, cb) {
 }
 
 SubDown.prototype._batch = function (operations, opts, cb) {
-  if (arguments.length === 0) return new abstract.AbstractChainedBatch(this)
-  if (!Array.isArray(operations)) return this.leveldown.batch.apply(null, arguments)
-
   var subops = new Array(operations.length)
+
   for (var i = 0; i < operations.length; i++) {
     var o = operations[i]
     subops[i] = { type: o.type, key: concat(this.prefix, o.key), value: o.value }
