@@ -2,10 +2,10 @@ var sub = require('./')
 var levelup = require('levelup')
 var memdown = require('memdown')
 
-var db = levelup('test', {db: memdown})
+var db = levelup('test', { db: memdown })
 
-var test = sub(db, 'test', {valueEncoding: 'utf-8', separator: '@'})
-var test2 = sub(test, 'tester', {valueEncoding: 'utf-8', separator: '@'})
+var test = sub(db, 'test', { valueEncoding: 'utf-8', separator: '@' })
+var test2 = sub(test, 'tester', { valueEncoding: 'utf-8', separator: '@' })
 
 test.put('hi', 'der')
 test.put('hello', ['world'], function () {

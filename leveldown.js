@@ -36,7 +36,7 @@ SubIterator.prototype._end = function (cb) {
 
 function SubDown (db, prefix, opts) {
   if (!(this instanceof SubDown)) return new SubDown(db, prefix, opts)
-  if (typeof opts === 'string') opts = {separator: opts}
+  if (typeof opts === 'string') opts = { separator: opts }
   if (!opts) opts = {}
 
   var separator = opts.separator
@@ -113,7 +113,7 @@ SubDown.prototype._batch = function (operations, opts, cb) {
   var subops = new Array(operations.length)
   for (var i = 0; i < operations.length; i++) {
     var o = operations[i]
-    subops[i] = {type: o.type, key: concat(this.prefix, o.key), value: o.value}
+    subops[i] = { type: o.type, key: concat(this.prefix, o.key), value: o.value }
   }
 
   this.leveldown.batch(subops, opts, cb)
@@ -137,7 +137,7 @@ function extend (xopts, opts) {
 }
 
 function fixRange (opts) {
-  return (!opts.reverse || (!opts.end && !opts.start)) ? opts : {start: opts.end, end: opts.start}
+  return (!opts.reverse || (!opts.end && !opts.start)) ? opts : { start: opts.end, end: opts.start }
 }
 
 SubDown.prototype._iterator = function (opts) {
