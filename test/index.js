@@ -74,6 +74,24 @@ test('SubDb main function', function (t) {
     })
   })
 
+  t.test('error from open() bubbles up', function (t) {
+    t.plan(1)
+
+    var mockdb = {
+      open: function (cb) {
+        process.nextTick(cb, new Error('error from underlying store'))
+      }
+    }
+
+    subdb(mockdb, 'test')
+
+    // Awkward: we don't pass a callback to levelup() so levelup goes
+    // into "promise mode" which we can't catch properly
+    process.once('unhandledRejection', (err) => {
+      t.is(err.message, 'error from underlying store')
+    })
+  })
+
   t.test('levelup *down is set to subdown which has correct storage', function (t) {
     var db = levelup(memdown())
     var sub = subdb(db, 'test')
@@ -185,5 +203,36 @@ test('SubDb main function', function (t) {
     var db = levelup(memdown())
     var sub = subdb(db, { valueEncoding: 'json' })
     t.equal(sub.db._db.db.prefix, '!!')
+  })
+
+  t.test('errors from iterator bubble up', function (t) {
+    t.plan(2)
+
+    var mockdb = {
+      open: function (cb) {
+        process.nextTick(cb)
+      },
+      iterator: function () {
+        return {
+          next: function (cb) {
+            process.nextTick(cb, new Error('next() error from underlying store'))
+          },
+          end: function (cb) {
+            process.nextTick(cb, new Error('end() error from underlying store'))
+          }
+        }
+      }
+    }
+
+    var sub = subdb(mockdb, 'test')
+    var it = sub.iterator()
+
+    it.next(function (err) {
+      t.is(err.message, 'next() error from underlying store')
+
+      it.end(function (err) {
+        t.is(err.message, 'end() error from underlying store')
+      })
+    })
   })
 })
