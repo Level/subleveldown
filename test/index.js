@@ -19,6 +19,19 @@ suite({
   errorIfExists: false
 })
 
+// Test without a user-provided levelup layer
+suite({
+  test: test,
+  factory: function () {
+    return subdown(memdown(), 'test')
+  },
+
+  // Unsupported features
+  seek: false,
+  createIfMissing: false,
+  errorIfExists: false
+})
+
 // Additional tests for this implementation
 test('SubDown constructor', function (t) {
   t.test('can be called without new', function (t) {
