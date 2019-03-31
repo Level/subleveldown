@@ -12,11 +12,11 @@ function concat (prefix, key, force) {
   return key
 }
 
-function SubIterator (ite, prefix) {
+function SubIterator (db, ite, prefix) {
   this.iterator = ite
   this.prefix = prefix
 
-  abstract.AbstractIterator.call(this)
+  abstract.AbstractIterator.call(this, db)
 }
 
 inherits(SubIterator, abstract.AbstractIterator)
@@ -142,7 +142,7 @@ function fixRange (opts) {
 
 SubDown.prototype._iterator = function (opts) {
   var xopts = extend(wrap(fixRange(opts), this._wrap), opts)
-  return new SubIterator(this.leveldown.iterator(xopts), this.prefix)
+  return new SubIterator(this, this.leveldown.iterator(xopts), this.prefix)
 }
 
 module.exports = SubDown
