@@ -1,7 +1,7 @@
 {
   "name": "subleveldown",
   "version": "3.0.1",
-  "description": "sublevels implemented using leveldowns",
+  "description": "Split a levelup database into sublevels with their own keyspace, encoding and events",
   "author": "Mathias Buus (@mafintosh)",
   "license": "MIT",
   "main": "index.js",
