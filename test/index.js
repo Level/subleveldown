@@ -1,23 +1,38 @@
 var test = require('tape')
+var suite = require('abstract-leveldown/test')
 var memdown = require('memdown')
 var encoding = require('encoding-down')
 var subdown = require('../leveldown')
 var subdb = require('..')
 var levelup = require('levelup')
-var testCommon = require('./common')
 
-require('abstract-leveldown/abstract/open-test').args(down, test, testCommon)
-require('abstract-leveldown/abstract/open-test').open(down, test, testCommon)
-require('abstract-leveldown/abstract/del-test').all(down, test, testCommon)
-require('abstract-leveldown/abstract/get-test').all(down, test, testCommon)
-require('abstract-leveldown/abstract/put-test').all(down, test, testCommon)
-require('abstract-leveldown/abstract/put-get-del-test').all(down, test, testCommon)
-require('abstract-leveldown/abstract/batch-test').all(down, test, testCommon)
-require('abstract-leveldown/abstract/chained-batch-test').all(down, test, testCommon)
-require('abstract-leveldown/abstract/close-test').close(down, test, testCommon)
-require('abstract-leveldown/abstract/iterator-test').all(down, test, testCommon)
-require('abstract-leveldown/abstract/iterator-range-test').all(down, test, testCommon)
+// Test abstract-leveldown compliance
+suite({
+  test: test,
+  factory: function () {
+    return subdown(levelup(memdown()), 'test')
+  },
 
+  // Unsupported features
+  seek: false,
+  createIfMissing: false,
+  errorIfExists: false
+})
+
+// Test without a user-provided levelup layer
+suite({
+  test: test,
+  factory: function () {
+    return subdown(memdown(), 'test')
+  },
+
+  // Unsupported features
+  seek: false,
+  createIfMissing: false,
+  errorIfExists: false
+})
+
+// Additional tests for this implementation
 test('SubDown constructor', function (t) {
   t.test('can be called without new', function (t) {
     var sub = subdown()
@@ -69,6 +84,24 @@ test('SubDb main function', function (t) {
       open: function (cb) {
         t.pass('opts.open called')
       }
+    })
+  })
+
+  t.test('error from open() bubbles up', function (t) {
+    t.plan(1)
+
+    var mockdb = {
+      open: function (cb) {
+        process.nextTick(cb, new Error('error from underlying store'))
+      }
+    }
+
+    subdb(mockdb, 'test')
+
+    // Awkward: we don't pass a callback to levelup() so levelup goes
+    // into "promise mode" which we can't catch properly
+    process.once('unhandledRejection', (err) => {
+      t.is(err.message, 'error from underlying store')
     })
   })
 
@@ -184,8 +217,35 @@ test('SubDb main function', function (t) {
     var sub = subdb(db, { valueEncoding: 'json' })
     t.equal(sub.db._db.db.prefix, '!!')
   })
-})
 
-function down (loc) {
-  return subdown(levelup(memdown()), 'test')
-}
+  t.test('errors from iterator bubble up', function (t) {
+    t.plan(2)
+
+    var mockdb = {
+      open: function (cb) {
+        process.nextTick(cb)
+      },
+      iterator: function () {
+        return {
+          next: function (cb) {
+            process.nextTick(cb, new Error('next() error from underlying store'))
+          },
+          end: function (cb) {
+            process.nextTick(cb, new Error('end() error from underlying store'))
+          }
+        }
+      }
+    }
+
+    var sub = subdb(mockdb, 'test')
+    var it = sub.iterator()
+
+    it.next(function (err) {
+      t.is(err.message, 'next() error from underlying store')
+
+      it.end(function (err) {
+        t.is(err.message, 'end() error from underlying store')
+      })
+    })
+  })
+})

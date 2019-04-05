@@ -12,11 +12,11 @@ function concat (prefix, key, force) {
   return key
 }
 
-function SubIterator (ite, prefix) {
+function SubIterator (db, ite, prefix) {
   this.iterator = ite
   this.prefix = prefix
 
-  abstract.AbstractIterator.call(this)
+  abstract.AbstractIterator.call(this, db)
 }
 
 inherits(SubIterator, abstract.AbstractIterator)
@@ -36,7 +36,7 @@ SubIterator.prototype._end = function (cb) {
 
 function SubDown (db, prefix, opts) {
   if (!(this instanceof SubDown)) return new SubDown(db, prefix, opts)
-  if (typeof opts === 'string') opts = {separator: opts}
+  if (typeof opts === 'string') opts = { separator: opts }
   if (!opts) opts = {}
 
   var separator = opts.separator
@@ -63,7 +63,7 @@ function SubDown (db, prefix, opts) {
     }
   }
 
-  abstract.AbstractLevelDOWN.call(this, 'no-location')
+  abstract.AbstractLevelDOWN.call(this)
 }
 
 inherits(SubDown, abstract.AbstractLevelDOWN)
@@ -94,6 +94,10 @@ SubDown.prototype._close = function (cb) {
   this.leveldown.close(cb)
 }
 
+SubDown.prototype._serializeKey = function (key) {
+  return Buffer.isBuffer(key) ? key : String(key)
+}
+
 SubDown.prototype._put = function (key, value, opts, cb) {
   this.leveldown.put(concat(this.prefix, key), value, opts, cb)
 }
@@ -107,16 +111,12 @@ SubDown.prototype._del = function (key, opts, cb) {
 }
 
 SubDown.prototype._batch = function (operations, opts, cb) {
-  if (arguments.length === 0) return new abstract.AbstractChainedBatch(this)
-  if (!Array.isArray(operations)) return this.leveldown.batch.apply(null, arguments)
-
-  var subops = new Array(operations.length)
+  // No need to make a copy of the array, abstract-leveldown does that
   for (var i = 0; i < operations.length; i++) {
-    var o = operations[i]
-    subops[i] = {type: o.type, key: concat(this.prefix, o.key), value: o.value}
+    operations[i].key = concat(this.prefix, operations[i].key)
   }
 
-  this.leveldown.batch(subops, opts, cb)
+  this.leveldown.batch(operations, opts, cb)
 }
 
 function extend (xopts, opts) {
@@ -137,12 +137,12 @@ function extend (xopts, opts) {
 }
 
 function fixRange (opts) {
-  return (!opts.reverse || (!opts.end && !opts.start)) ? opts : {start: opts.end, end: opts.start}
+  return (!opts.reverse || (!opts.end && !opts.start)) ? opts : { start: opts.end, end: opts.start }
 }
 
 SubDown.prototype._iterator = function (opts) {
   var xopts = extend(wrap(fixRange(opts), this._wrap), opts)
-  return new SubIterator(this.leveldown.iterator(xopts), this.prefix)
+  return new SubIterator(this, this.leveldown.iterator(xopts), this.prefix)
 }
 
 module.exports = SubDown
