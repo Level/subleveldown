@@ -1,6 +1,38 @@
 # Changelog
 
+_**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
+
 ## [Unreleased][unreleased]
+
+## [4.0.0] - 2019-04-05
+
+### Changed
+
+- Upgrade `abstract-leveldown` from `^5.0.0` to `^6.0.2` (#61) (@vweevers)
+- Upgrade `encoding-down` from `^5.0.3` to `^6.0.1` (#61) (@vweevers)
+- Upgrade `levelup` from `^3.0.1` to `^4.0.1` (#61) (@vweevers)
+- Avoid unnecessary copy of batch operations (#61) (@vweevers)
+- Invoke abstract tests from single function (#61) (@vweevers)
+- Add mandatory `db` argument to abstract iterator (#61) (@vweevers)
+- Upgrade `memdown` devDependency from `^3.0.0` to `^4.0.0` (#61) (@vweevers)
+- Upgrade `nyc` devDependency from `^12.0.2` to `^13.3.0` (#61) (@vweevers)
+- Upgrade `standard` devDependency from `^11.0.1` to `^12.0.1` (#61) (@vweevers)
+- Apply common project tweaks (#58, #59) (@vweevers)
+
+### Added
+
+- Test that errors from `open()` and iterators bubble up (#61) (@vweevers)
+- Test without a user-provided `levelup` layer (#61) (@vweevers)
+- Gitignore `coverage` directory (#61) (@vweevers)
+
+### Removed
+
+- Remove obsolete `_batch()` checks (#61) (@vweevers)
+- Remove dummy location from `abstract-leveldown` constructor call (#61) (@vweevers)
+
+### Fixed
+
+- Serialize non-buffer keys to strings (#61) (@vweevers)
 
 ## [3.0.1] - 2018-07-27
 
@@ -145,7 +177,9 @@
 
 :seedling: Initial release.
 
-[unreleased]: https://github.com/level/subleveldown/compare/v3.0.1...HEAD
+[unreleased]: https://github.com/level/subleveldown/compare/v4.0.0...HEAD
+
+[4.0.0]: https://github.com/level/subleveldown/compare/v3.0.1...v4.0.0
 
 [3.0.1]: https://github.com/level/subleveldown/compare/v3.0.0...v3.0.1
 
