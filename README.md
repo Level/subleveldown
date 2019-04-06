@@ -1,6 +1,6 @@
 # subleveldown
 
-> Sublevels on top of [`levelup`][levelup] with different encodings for each sublevel.
+> Split a [`levelup`][levelup] database into _sublevels_ with their own keyspace, encoding and events.
 
 [![level badge][level-badge]](https://github.com/Level/awesome)
 [![npm](https://img.shields.io/npm/v/subleveldown.svg?label=&logo=npm)](https://www.npmjs.com/package/subleveldown)
