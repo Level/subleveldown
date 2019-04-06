@@ -4,35 +4,35 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
 ## [Unreleased][unreleased]
 
-## [4.0.0] - 2019-04-05
+## [4.0.0] - 2019-04-06
 
 ### Changed
 
-- Upgrade `abstract-leveldown` from `^5.0.0` to `^6.0.2` (#61) (@vweevers)
-- Upgrade `encoding-down` from `^5.0.3` to `^6.0.1` (#61) (@vweevers)
-- Upgrade `levelup` from `^3.0.1` to `^4.0.1` (#61) (@vweevers)
-- Avoid unnecessary copy of batch operations (#61) (@vweevers)
-- Invoke abstract tests from single function (#61) (@vweevers)
-- Add mandatory `db` argument to abstract iterator (#61) (@vweevers)
-- Upgrade `memdown` devDependency from `^3.0.0` to `^4.0.0` (#61) (@vweevers)
-- Upgrade `nyc` devDependency from `^12.0.2` to `^13.3.0` (#61) (@vweevers)
-- Upgrade `standard` devDependency from `^11.0.1` to `^12.0.1` (#61) (@vweevers)
-- Apply common project tweaks (#58, #59) (@vweevers)
+- Upgrade `abstract-leveldown` from `^5.0.0` to `^6.0.2` ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `encoding-down` from `^5.0.3` to `^6.0.1` ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `levelup` from `^3.0.1` to `^4.0.1` ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Avoid unnecessary copy of batch operations ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Invoke abstract tests from single function ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Add mandatory `db` argument to abstract iterator ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `memdown` devDependency from `^3.0.0` to `^4.0.0` ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `nyc` devDependency from `^12.0.2` to `^13.3.0` ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `standard` devDependency from `^11.0.1` to `^12.0.1` ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Apply common project tweaks ([#58](https://github.com/level/subleveldown/issues/58), [#59](https://github.com/level/subleveldown/issues/59)) ([**@vweevers**](https://github.com/vweevers))
 
 ### Added
 
-- Test that errors from `open()` and iterators bubble up (#61) (@vweevers)
-- Test without a user-provided `levelup` layer (#61) (@vweevers)
-- Gitignore `coverage` directory (#61) (@vweevers)
+- Test that errors from `open()` and iterators bubble up ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Test without a user-provided `levelup` layer ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Gitignore `coverage` directory ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
 
 ### Removed
 
-- Remove obsolete `_batch()` checks (#61) (@vweevers)
-- Remove dummy location from `abstract-leveldown` constructor call (#61) (@vweevers)
+- Remove obsolete `_batch()` checks ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Remove dummy location from `abstract-leveldown` constructor call ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
 
 ### Fixed
 
-- Serialize non-buffer keys to strings (#61) (@vweevers)
+- Serialize non-buffer keys to strings ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
 
 ## [3.0.1] - 2018-07-27
 
