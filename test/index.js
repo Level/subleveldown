@@ -248,39 +248,4 @@ test('SubDb main function', function (t) {
       })
     })
   })
-  t.test('can arbitrarily seek', function (t) {
-    t.plan(7)
-
-    var db = levelup(memdown())
-    var sub = subdb(db, 'sub')
-
-    db.once('open', function () {
-      var it = sub.iterator({ keyAsBuffer: false, valueAsBuffer: false })
-      sub.batch([
-        { type: 'put', key: 'a', value: 'A' },
-        { type: 'put', key: 'b', value: 'B' },
-        { type: 'put', key: 'c', value: 'C' },
-        { type: 'put', key: 'd', value: 'D' },
-        { type: 'put', key: 'e', value: 'E' }
-      ], (err) => {
-        t.error(err, 'no error')
-        it.seek('c')
-        it.next((err, key, value) => {
-          t.error(err, 'no error')
-          t.same(key, 'c', 'key is as expected')
-          it.seek('d')
-          it.next((err, key, value) => {
-            t.error(err, 'no error')
-            t.same(key, 'd', 'key is as expected')
-            it.seek('a')
-            it.next((err, key, value) => {
-              t.error(err, 'no error')
-              t.same(key, 'a', 'key is as expected')
-              t.end()
-            })
-          })
-        })
-      })
-    })
-  })
 })

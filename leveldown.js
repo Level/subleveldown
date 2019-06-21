@@ -30,10 +30,6 @@ SubIterator.prototype._next = function (cb) {
   })
 }
 
-SubIterator.prototype._seek = function (key) {
-  this.iterator.seek(concat(this.prefix, key))
-}
-
 SubIterator.prototype._end = function (cb) {
   this.iterator.end(cb)
 }
