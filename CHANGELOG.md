@@ -4,6 +4,16 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
 ## [Unreleased][unreleased]
 
+## [4.1.0] - 2019-06-28
+
+### Changed
+
+- Upgrade `nyc` devDependency from `^13.3.0` to `^14.0.0` ([#63](https://github.com/level/subleveldown/issues/63)) ([**@vweevers**](https://github.com/vweevers))
+
+### Added
+
+- Support seeking ([#66](https://github.com/level/subleveldown/issues/66)) ([**@MeirionHughes**](https://github.com/MeirionHughes))
+
 ## [4.0.0] - 2019-04-06
 
 ### Changed
@@ -177,7 +187,9 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
 :seedling: Initial release.
 
-[unreleased]: https://github.com/level/subleveldown/compare/v4.0.0...HEAD
+[unreleased]: https://github.com/level/subleveldown/compare/v4.1.0...HEAD
+
+[4.1.0]: https://github.com/level/subleveldown/compare/v4.0.0...v4.1.0
 
 [4.0.0]: https://github.com/level/subleveldown/compare/v3.0.1...v4.0.0
 
