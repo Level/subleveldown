@@ -4,6 +4,18 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
 ## [Unreleased][unreleased]
 
+## [4.1.1] - 2019-08-18
+
+### Changed
+
+- Upgrade `memdown` devDependency from `^4.0.0` to `^5.0.0` ([#70](https://github.com/level/subleveldown/issues/70)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `hallmark` devDependency from `^0.1.0` to `^1.0.0` ([#68](https://github.com/level/subleveldown/issues/68)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `standard` devDependency from `^12.0.1` to `^13.0.1` ([#67](https://github.com/level/subleveldown/issues/67)) ([**@vweevers**](https://github.com/vweevers))
+
+### Fixed
+
+- Relax `isAbstract()` check ([`fbbf525`](https://github.com/level/subleveldown/commit/fbbf525)) ([**@vweevers**](https://github.com/vweevers))
+
 ## [4.1.0] - 2019-06-28
 
 ### Changed
@@ -187,7 +199,9 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
 :seedling: Initial release.
 
-[unreleased]: https://github.com/level/subleveldown/compare/v4.1.0...HEAD
+[unreleased]: https://github.com/level/subleveldown/compare/v4.1.1...HEAD
+
+[4.1.1]: https://github.com/level/subleveldown/compare/v4.1.0...v4.1.1
 
 [4.1.0]: https://github.com/level/subleveldown/compare/v4.0.0...v4.1.0
 
