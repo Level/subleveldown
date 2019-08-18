@@ -154,16 +154,12 @@ module.exports = SubDown
 function down (db, type) {
   if (typeof db.down === 'function') return db.down(type)
   if (type && db.type === type) return db
-  if (isAbstract(db.db)) return down(db.db, type)
-  if (isAbstract(db._db)) return down(db._db, type)
+  if (isLooseAbstract(db.db)) return down(db.db, type)
+  if (isLooseAbstract(db._db)) return down(db._db, type)
   return type ? null : db
 }
 
-function isAbstract (db) {
+function isLooseAbstract (db) {
   if (!db || typeof db !== 'object') { return false }
-  return Object.keys(abstract.AbstractLevelDOWN.prototype).filter(function (name) {
-    return name[0] !== '_'
-  }).every(function (name) {
-    return typeof db[name] === 'function'
-  })
+  return typeof db._batch === 'function' && typeof db._iterator === 'function'
 }
