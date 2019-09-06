@@ -2,8 +2,6 @@
 
 _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
-## [Unreleased][unreleased]
-
 ## [4.1.1] - 2019-08-18
 
 ### Changed
@@ -198,8 +196,6 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 ## 1.0.0 - 2014-12-23
 
 :seedling: Initial release.
-
-[unreleased]: https://github.com/level/subleveldown/compare/v4.1.1...HEAD
 
 [4.1.1]: https://github.com/level/subleveldown/compare/v4.1.0...v4.1.1
 
