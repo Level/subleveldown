@@ -16,11 +16,11 @@
     "test": "test"
   },
   "dependencies": {
-    "abstract-leveldown": "^6.0.2",
-    "encoding-down": "^6.0.1",
+    "abstract-leveldown": "^6.1.1",
+    "encoding-down": "^6.2.0",
     "inherits": "^2.0.3",
     "level-option-wrap": "^1.1.0",
-    "levelup": "^4.0.1"
+    "levelup": "^4.2.0"
   },
   "devDependencies": {
     "coveralls": "^3.0.2",
