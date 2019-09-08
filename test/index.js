@@ -344,8 +344,7 @@ test('SubDb main function', function (t) {
       const next = after(subs.length, callback)
 
       for (const sub of subs) {
-        // TODO: use sub.clear() once it lands in levelup
-        sub.db.clear(opts, next)
+        sub.clear(opts, next)
       }
     }
 
