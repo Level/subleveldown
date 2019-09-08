@@ -16,7 +16,10 @@ suite({
   // Unsupported features
   seek: false,
   createIfMissing: false,
-  errorIfExists: false
+  errorIfExists: false,
+
+  // Opt-in to new clear() tests
+  clear: true
 })
 
 // Test without a user-provided levelup layer
@@ -29,7 +32,10 @@ suite({
   // Unsupported features
   seek: false,
   createIfMissing: false,
-  errorIfExists: false
+  errorIfExists: false,
+
+  // Opt-in to new clear() tests
+  clear: true
 })
 
 // Additional tests for this implementation
