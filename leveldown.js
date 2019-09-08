@@ -2,6 +2,9 @@ var inherits = require('inherits')
 var abstract = require('abstract-leveldown')
 var wrap = require('level-option-wrap')
 
+var rangeOptions = 'start end gt gte lt lte'.split(' ')
+var defaultClear = abstract.AbstractLevelDOWN.prototype._clear
+var hasOwnProperty = Object.prototype.hasOwnProperty
 var END = Buffer.from([0xff])
 
 function concat (prefix, key, force) {
@@ -123,6 +126,32 @@ SubDown.prototype._batch = function (operations, opts, cb) {
   this.leveldown.batch(operations, opts, cb)
 }
 
+SubDown.prototype._clear = function (opts, cb) {
+  if (typeof this.leveldown.clear === 'function') {
+    // Prefer optimized implementation of clear()
+    opts = addRestOptions(wrap(opts, this._wrap), opts)
+    this.leveldown.clear(opts, cb)
+  } else {
+    // Fall back to iterator-based implementation
+    defaultClear.call(this, opts, cb)
+  }
+}
+
+function addRestOptions (target, opts) {
+  for (var k in opts) {
+    if (hasOwnProperty.call(opts, k) && !isRangeOption(k)) {
+      target[k] = opts[k]
+    }
+  }
+
+  return target
+}
+
+function isRangeOption (k) {
+  return rangeOptions.indexOf(k) !== -1
+}
+
+// TODO (refactor): use addRestOptions instead
 function extend (xopts, opts) {
   xopts.keys = opts.keys
   xopts.values = opts.values
