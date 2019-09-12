@@ -2,6 +2,8 @@ var test = require('tape')
 var suite = require('abstract-leveldown/test')
 var memdown = require('memdown')
 var encoding = require('encoding-down')
+var concat = require('level-concat-iterator')
+var after = require('after')
 var subdown = require('../leveldown')
 var subdb = require('..')
 var levelup = require('levelup')
@@ -16,7 +18,10 @@ suite({
   // Unsupported features
   seek: false,
   createIfMissing: false,
-  errorIfExists: false
+  errorIfExists: false,
+
+  // Opt-in to new clear() tests
+  clear: true
 })
 
 // Test without a user-provided levelup layer
@@ -29,7 +34,10 @@ suite({
   // Unsupported features
   seek: false,
   createIfMissing: false,
-  errorIfExists: false
+  errorIfExists: false,
+
+  // Opt-in to new clear() tests
+  clear: true
 })
 
 // Additional tests for this implementation
@@ -283,4 +291,74 @@ test('SubDb main function', function (t) {
       })
     })
   })
+
+  t.test('clear (optimized)', function (t) {
+    var down = memdown()
+    t.is(typeof down.clear, 'function', 'has clear()')
+    testClear(t, down)
+  })
+
+  t.test('clear (with iterator-based fallback)', function (t) {
+    var down = memdown()
+    down.clear = undefined
+    testClear(t, down)
+  })
+
+  function testClear (t, down) {
+    const db = levelup(down)
+    const sub1 = subdb(db, '1')
+    const sub2 = subdb(db, '2')
+
+    populate([sub1, sub2], ['a', 'b'], function (err) {
+      t.ifError(err, 'no populate error')
+
+      verify(['!1!a', '!1!b', '!2!a', '!2!b'], function () {
+        clear([sub1], {}, function (err) {
+          t.ifError(err, 'no clear error')
+
+          verify(['!2!a', '!2!b'], function () {
+            populate([sub1], ['a', 'b'], function (err) {
+              t.ifError(err, 'no populate error')
+
+              clear([sub2], { lt: 'b' }, function (err) {
+                t.ifError(err, 'no clear error')
+                verify(['!1!a', '!1!b', '!2!b'], t.end.bind(t))
+              })
+            })
+          })
+        })
+      })
+    })
+
+    function populate (subs, items, callback) {
+      const next = after(subs.length, callback)
+
+      for (const sub of subs) {
+        sub.batch(items.map(function (item) {
+          return { type: 'put', key: item, value: item }
+        }), next)
+      }
+    }
+
+    function clear (subs, opts, callback) {
+      const next = after(subs.length, callback)
+
+      for (const sub of subs) {
+        sub.clear(opts, next)
+      }
+    }
+
+    function verify (expected, callback) {
+      concat(db.iterator({ keyAsBuffer: false }), function (err, entries) {
+        t.ifError(err, 'no concat error')
+        t.same(entries.map(getKey), expected)
+
+        if (callback) callback()
+      })
+    }
+  }
 })
+
+function getKey (entry) {
+  return entry.key
+}

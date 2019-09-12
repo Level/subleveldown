@@ -35,17 +35,31 @@ var sub = require('subleveldown')
 var level = require('level')
 
 var db = level('db')
+var example = sub(db, 'example')
+var nested = sub(example, 'nested')
+```
 
-var test = sub(db, 'test') // test is just a regular levelup
-var test2 = sub(db, 'test2')
-var nested = sub(test, 'nested')
+The `example` and `nested` db's are just regular [`levelup`][levelup] instances:
 
-test.put('hello', 'world', function() {
-  nested.put('hi', 'welt', function() {
+```js
+example.put('hello', 'world', function () {
+  nested.put('hi', 'welt', function () {
     // will print {key:'hello', value:'world'}
-    test.createReadStream().on('data', console.log)
+    example.createReadStream().on('data', console.log)
   })
 })
+```
+
+They also support `db.clear()` which is very useful to empty a bucket of stuff:
+
+```js
+example.clear(function (err) {})
+
+// Or delete a range within `example`
+example.clear({ gt: 'hello' }, function (err) {})
+
+// For believers
+await example.clear()
 ```
 
 ## Background
