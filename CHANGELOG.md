@@ -2,6 +2,24 @@
 
 _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
+## [4.1.2] - 2019-09-12
+
+### Changed
+
+- Upgrade `standard` devDependency from `^13.0.1` to `^14.0.0` ([#71](https://github.com/level/subleveldown/issues/71)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `hallmark` devDependency from `^1.0.0` to `^2.0.0` ([#72](https://github.com/level/subleveldown/issues/72)) ([**@vweevers**](https://github.com/vweevers))
+
+### Removed
+
+- Remove outdated `example.js` ([`3ef72c9`](https://github.com/level/subleveldown/commit/3ef72c9)) ([**@vweevers**](https://github.com/vweevers))
+
+### Fixed
+
+- Polish `clear()` ([#74](https://github.com/level/subleveldown/issues/74)) ([**@vweevers**](https://github.com/vweevers))
+  - Bump `levelup`, `abstract-leveldown` and `encoding-down` to prevent dedupe
+  - Opt-in to new `clear()` tests
+  - Prefer optimized implementation of `clear()`
+
 ## [4.1.1] - 2019-08-18
 
 ### Changed
@@ -196,6 +214,8 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 ## 1.0.0 - 2014-12-23
 
 :seedling: Initial release.
+
+[4.1.2]: https://github.com/level/subleveldown/compare/v4.1.1...v4.1.2
 
 [4.1.1]: https://github.com/level/subleveldown/compare/v4.1.0...v4.1.1
 
