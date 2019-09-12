@@ -1,6 +1,6 @@
 {
   "name": "subleveldown",
-  "version": "4.1.1",
+  "version": "4.1.2",
   "description": "Split a levelup database into sublevels with their own keyspace, encoding and events",
   "author": "Mathias Buus (@mafintosh)",
   "license": "MIT",
