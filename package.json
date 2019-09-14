@@ -6,7 +6,7 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "test": "standard && hallmark && nyc node test",
+    "test": "standard && hallmark && (nyc -s node test | faucet) && nyc report",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "hallmark": "hallmark --fix",
     "dependency-check": "dependency-check . test/*.js",
@@ -26,6 +26,7 @@
     "after": "^0.8.2",
     "coveralls": "^3.0.2",
     "dependency-check": "^3.3.0",
+    "faucet": "^0.0.1",
     "hallmark": "^2.0.0",
     "level-community": "^3.0.0",
     "level-concat-iterator": "^2.0.1",
