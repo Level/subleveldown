@@ -7,6 +7,8 @@ var after = require('after')
 var subdown = require('../leveldown')
 var subdb = require('..')
 var levelup = require('levelup')
+var reachdown = require('reachdown')
+var encrypt = require('@adorsys/encrypt-down')
 
 // Test abstract-leveldown compliance
 suite({
@@ -357,6 +359,37 @@ test('SubDb main function', function (t) {
       })
     }
   }
+})
+
+// The reason we test encrypt-down is that subleveldown should in this case
+// peel off the levelup, deferred-leveldown and encoding-down layers from db,
+// but stop peeling at the encrypt-down layer.
+test('subleveldown on encrypt-down', function (t) {
+  t.plan(5)
+
+  var jwk = {
+    kty: 'oct',
+    alg: 'A256GCM',
+    use: 'enc',
+    k: '123456789abcdefghijklmnopqrstuvwxyz12345678'
+  }
+
+  var db = levelup(encoding(encrypt(memdown(), { jwk })))
+  var sub = subdb(db, 'test')
+
+  sub.put('key', 'value', function (err) {
+    t.error(err, 'no err')
+
+    db.get('!test!key', function (err, value) {
+      t.ifError(err, 'no levelup get error')
+      t.is(value, 'value')
+    })
+
+    reachdown(db).get('!test!key', { asBuffer: false }, function (err, value) {
+      t.ifError(err, 'no memdown get error')
+      t.isNot(value, 'value', 'value is encrypted')
+    })
+  })
 })
 
 function getKey (entry) {
