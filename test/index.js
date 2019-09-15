@@ -9,7 +9,8 @@ var subdb = require('..')
 var levelup = require('levelup')
 var reachdown = require('reachdown')
 var memdb = require('memdb')
-var encrypt = require('@adorsys/encrypt-down')
+var abstract = require('abstract-leveldown')
+var inherits = require('util').inherits
 
 // Test abstract-leveldown compliance
 suite({
@@ -362,20 +363,30 @@ test('SubDb main function', function (t) {
   }
 })
 
-// The reason we test encrypt-down is that subleveldown should in this case
-// peel off the levelup, deferred-leveldown and encoding-down layers from db,
-// but stop peeling at the encrypt-down layer.
-test('subleveldown on encrypt-down', function (t) {
-  t.plan(5)
+// Test that we peel off the levelup, deferred-leveldown and encoding-down
+// layers from db, but stop at any other intermediate layer like encrypt-down,
+// cachedown, etc.
+test('subleveldown on intermediate layer', function (t) {
+  t.plan(7)
 
-  var jwk = {
-    kty: 'oct',
-    alg: 'A256GCM',
-    use: 'enc',
-    k: '123456789abcdefghijklmnopqrstuvwxyz12345678'
+  function Intermediate (db) {
+    abstract.AbstractLevelDOWN.call(this)
+    this.db = db
   }
 
-  var db = levelup(encoding(encrypt(memdown(), { jwk })))
+  inherits(Intermediate, abstract.AbstractLevelDOWN)
+
+  Intermediate.prototype._put = function (key, value, options, callback) {
+    t.pass('got _put call')
+    this.db._put('mitm' + key, value, options, callback)
+  }
+
+  Intermediate.prototype._get = function (key, options, callback) {
+    t.pass('got _get call')
+    this.db._get('mitm' + key, options, callback)
+  }
+
+  var db = levelup(encoding(new Intermediate(memdown())))
   var sub = subdb(db, 'test')
 
   sub.put('key', 'value', function (err) {
@@ -386,9 +397,9 @@ test('subleveldown on encrypt-down', function (t) {
       t.is(value, 'value')
     })
 
-    reachdown(db).get('!test!key', { asBuffer: false }, function (err, value) {
+    reachdown(db).get('mitm!test!key', { asBuffer: false }, function (err, value) {
       t.ifError(err, 'no memdown get error')
-      t.isNot(value, 'value', 'value is encrypted')
+      t.is(value, 'value')
     })
   })
 })
