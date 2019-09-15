@@ -8,6 +8,7 @@ var subdown = require('../leveldown')
 var subdb = require('..')
 var levelup = require('levelup')
 var reachdown = require('reachdown')
+var memdb = require('memdb')
 var encrypt = require('@adorsys/encrypt-down')
 
 // Test abstract-leveldown compliance
@@ -388,6 +389,37 @@ test('subleveldown on encrypt-down', function (t) {
     reachdown(db).get('!test!key', { asBuffer: false }, function (err, value) {
       t.ifError(err, 'no memdown get error')
       t.isNot(value, 'value', 'value is encrypted')
+    })
+  })
+})
+
+test('legacy memdb (old levelup)', function (t) {
+  t.plan(7)
+
+  // Should not result in double json encoding
+  var db = memdb({ valueEncoding: 'json' })
+  var sub = subdb(db, 'test', { valueEncoding: 'json' })
+
+  // Integration with memdb still works because subleveldown waits to reachdown
+  // until the (old levelup) db is open. Reaching down then correctly lands on
+  // the memdown db. If subleveldown were to reachdown immediately it'd land on
+  // the old deferred-leveldown (which when unopened doesn't have a reference to
+  // the memdown db yet) so we'd be unable to persist anything.
+  t.is(Object.getPrototypeOf(reachdown(db)).constructor.name, 'DeferredLevelDOWN')
+
+  sub.put('key', { a: 1 }, function (err) {
+    t.ifError(err, 'no put error')
+
+    sub.get('key', function (err, value) {
+      t.ifError(err, 'no get error')
+      t.same(value, { a: 1 })
+    })
+
+    t.is(Object.getPrototypeOf(reachdown(db)).constructor.name, 'MemDOWN')
+
+    reachdown(db).get('!test!key', { asBuffer: false }, function (err, value) {
+      t.ifError(err, 'no get error')
+      t.is(value, '{"a":1}')
     })
   })
 })
