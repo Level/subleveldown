@@ -2,6 +2,12 @@
 
 _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
+## [4.1.3] - 2019-09-17
+
+### Changed
+
+- Use `reachdown` package ([Level/community#82](https://github.com/Level/community/issues/82)) ([#75](https://github.com/level/subleveldown/issues/75)) ([**@vweevers**](https://github.com/vweevers))
+
 ## [4.1.2] - 2019-09-12
 
 ### Changed
@@ -214,6 +220,8 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 ## 1.0.0 - 2014-12-23
 
 :seedling: Initial release.
+
+[4.1.3]: https://github.com/level/subleveldown/compare/v4.1.2...v4.1.3
 
 [4.1.2]: https://github.com/level/subleveldown/compare/v4.1.1...v4.1.2
 
