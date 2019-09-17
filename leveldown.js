@@ -1,6 +1,8 @@
 var inherits = require('inherits')
 var abstract = require('abstract-leveldown')
 var wrap = require('level-option-wrap')
+var reachdown = require('reachdown')
+var matchdown = require('./matchdown')
 
 var rangeOptions = 'start end gt gte lt lte'.split(' ')
 var defaultClear = abstract.AbstractLevelDOWN.prototype._clear
@@ -83,13 +85,13 @@ SubDown.prototype._open = function (opts, cb) {
   this.db.open(function (err) {
     if (err) return cb(err)
 
-    var subdb = down(self.db, 'subleveldown')
+    var subdb = reachdown(self.db, 'subleveldown')
 
     if (subdb && subdb.prefix) {
       self.prefix = subdb.prefix + self.prefix
-      self.leveldown = down(subdb.db)
+      self.leveldown = reachdown(subdb.db, matchdown, false)
     } else {
-      self.leveldown = down(self.db)
+      self.leveldown = reachdown(self.db, matchdown, false)
     }
 
     if (self._beforeOpen) self._beforeOpen(cb)
@@ -179,16 +181,3 @@ SubDown.prototype._iterator = function (opts) {
 }
 
 module.exports = SubDown
-
-function down (db, type) {
-  if (typeof db.down === 'function') return db.down(type)
-  if (type && db.type === type) return db
-  if (isLooseAbstract(db.db)) return down(db.db, type)
-  if (isLooseAbstract(db._db)) return down(db._db, type)
-  return type ? null : db
-}
-
-function isLooseAbstract (db) {
-  if (!db || typeof db !== 'object') { return false }
-  return typeof db._batch === 'function' && typeof db._iterator === 'function'
-}

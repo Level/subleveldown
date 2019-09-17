@@ -7,6 +7,10 @@ var after = require('after')
 var subdown = require('../leveldown')
 var subdb = require('..')
 var levelup = require('levelup')
+var reachdown = require('reachdown')
+var memdb = require('memdb')
+var abstract = require('abstract-leveldown')
+var inherits = require('util').inherits
 
 // Test abstract-leveldown compliance
 suite({
@@ -357,6 +361,78 @@ test('SubDb main function', function (t) {
       })
     }
   }
+})
+
+// Test that we peel off the levelup, deferred-leveldown and encoding-down
+// layers from db, but stop at any other intermediate layer like encrypt-down,
+// cachedown, etc.
+test('subleveldown on intermediate layer', function (t) {
+  t.plan(7)
+
+  function Intermediate (db) {
+    abstract.AbstractLevelDOWN.call(this)
+    this.db = db
+  }
+
+  inherits(Intermediate, abstract.AbstractLevelDOWN)
+
+  Intermediate.prototype._put = function (key, value, options, callback) {
+    t.pass('got _put call')
+    this.db._put('mitm' + key, value, options, callback)
+  }
+
+  Intermediate.prototype._get = function (key, options, callback) {
+    t.pass('got _get call')
+    this.db._get('mitm' + key, options, callback)
+  }
+
+  var db = levelup(encoding(new Intermediate(memdown())))
+  var sub = subdb(db, 'test')
+
+  sub.put('key', 'value', function (err) {
+    t.error(err, 'no err')
+
+    db.get('!test!key', function (err, value) {
+      t.ifError(err, 'no levelup get error')
+      t.is(value, 'value')
+    })
+
+    reachdown(db).get('mitm!test!key', { asBuffer: false }, function (err, value) {
+      t.ifError(err, 'no memdown get error')
+      t.is(value, 'value')
+    })
+  })
+})
+
+test('legacy memdb (old levelup)', function (t) {
+  t.plan(7)
+
+  // Should not result in double json encoding
+  var db = memdb({ valueEncoding: 'json' })
+  var sub = subdb(db, 'test', { valueEncoding: 'json' })
+
+  // Integration with memdb still works because subleveldown waits to reachdown
+  // until the (old levelup) db is open. Reaching down then correctly lands on
+  // the memdown db. If subleveldown were to reachdown immediately it'd land on
+  // the old deferred-leveldown (which when unopened doesn't have a reference to
+  // the memdown db yet) so we'd be unable to persist anything.
+  t.is(Object.getPrototypeOf(reachdown(db)).constructor.name, 'DeferredLevelDOWN')
+
+  sub.put('key', { a: 1 }, function (err) {
+    t.ifError(err, 'no put error')
+
+    sub.get('key', function (err, value) {
+      t.ifError(err, 'no get error')
+      t.same(value, { a: 1 })
+    })
+
+    t.is(Object.getPrototypeOf(reachdown(db)).constructor.name, 'MemDOWN')
+
+    reachdown(db).get('!test!key', { asBuffer: false }, function (err, value) {
+      t.ifError(err, 'no get error')
+      t.is(value, '{"a":1}')
+    })
+  })
 })
 
 function getKey (entry) {
