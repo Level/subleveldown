@@ -68,22 +68,18 @@ function SubDown (db, prefix, opts) {
 
   if (subdb && subdb.prefix) {
     this.prefix = subdb.prefix + this.prefix
-    this.leveldown = subdb.leveldown
+    this.db = subdb.db || subdb.leveldown // TODO: should we, for backward compat?
   } else {
-    this.leveldown = reachdown(db, matchdown, false)
+    this.db = reachdown(db, matchdown, false)
   }
 
-  if (reachdown(this.leveldown, 'deferred-leveldown') === this.leveldown) {
+  if (reachdown(this.db, 'deferred-leveldown') === this.db) {
     // When old deferred-leveldown is unopened it doesn't have a reference
     // to the underlying db yet and we therefore cannot access it.
     throw new Error('Not compatible with levelup < 2.0.0 / deferred-leveldown < 2.0.0')
-  } else if (!this.leveldown.status) {
+  } else if (!this.db.status) {
     throw new Error('Not compatible with abstract-leveldown < 2.4.0')
   }
-
-  // For compatibility with reachdown
-  // TODO (next major): remove this.leveldown in favor of this.db
-  this.db = this.leveldown
 
   this._wrap = {
     gt: function (x) {
@@ -105,15 +101,15 @@ SubDown.prototype.type = 'subleveldown'
 SubDown.prototype._open = function (opts, cb) {
   var self = this
 
-  if (this.leveldown.status === 'open') {
+  if (this.db.status === 'open') {
     process.nextTick(finish)
-  } else if (this.leveldown.status === 'opening') {
+  } else if (this.db.status === 'opening') {
     if (!this._externalOpener) {
       return process.nextTick(cb, new Error('Database was opened by third party'))
     }
 
     this._externalOpener.once('open', finish)
-  } else if (this.leveldown.status === 'closing') {
+  } else if (this.db.status === 'closing') {
     if (!this._externalOpener) {
       return process.nextTick(cb, new Error('Database was closed by third party'))
     }
@@ -123,7 +119,7 @@ SubDown.prototype._open = function (opts, cb) {
     })
   } else {
     // TODO: pass levelup options?
-    this.leveldown.open(finish)
+    this.db.open(finish)
   }
 
   function finish (err) {
@@ -135,15 +131,15 @@ SubDown.prototype._open = function (opts, cb) {
 SubDown.prototype._close = function (cb) {
   var self = this
 
-  if (this.leveldown.status === 'new' || this.leveldown.status === 'closed') {
+  if (this.db.status === 'new' || this.db.status === 'closed') {
     process.nextTick(cb)
-  } else if (this.leveldown.status === 'closing') {
+  } else if (this.db.status === 'closing') {
     if (!this._externalOpener) {
       return process.nextTick(cb, new Error('Database was closed by third party'))
     }
 
     this._externalOpener.once('closed', cb)
-  } else if (this.leveldown.status === 'opening') {
+  } else if (this.db.status === 'opening') {
     if (!this._externalOpener) {
       return process.nextTick(cb, new Error('Database was opened by third party'))
     }
@@ -152,7 +148,7 @@ SubDown.prototype._close = function (cb) {
       self._close(cb)
     })
   } else {
-    this.leveldown.close(cb)
+    this.db.close(cb)
   }
 }
 
@@ -161,15 +157,15 @@ SubDown.prototype._serializeKey = function (key) {
 }
 
 SubDown.prototype._put = function (key, value, opts, cb) {
-  this.leveldown.put(concat(this.prefix, key), value, opts, cb)
+  this.db.put(concat(this.prefix, key), value, opts, cb)
 }
 
 SubDown.prototype._get = function (key, opts, cb) {
-  this.leveldown.get(concat(this.prefix, key), opts, cb)
+  this.db.get(concat(this.prefix, key), opts, cb)
 }
 
 SubDown.prototype._del = function (key, opts, cb) {
-  this.leveldown.del(concat(this.prefix, key), opts, cb)
+  this.db.del(concat(this.prefix, key), opts, cb)
 }
 
 SubDown.prototype._batch = function (operations, opts, cb) {
@@ -178,14 +174,14 @@ SubDown.prototype._batch = function (operations, opts, cb) {
     operations[i].key = concat(this.prefix, operations[i].key)
   }
 
-  this.leveldown.batch(operations, opts, cb)
+  this.db.batch(operations, opts, cb)
 }
 
 SubDown.prototype._clear = function (opts, cb) {
-  if (typeof this.leveldown.clear === 'function') {
+  if (typeof this.db.clear === 'function') {
     // Prefer optimized implementation of clear()
     opts = addRestOptions(wrap(opts, this._wrap), opts)
-    this.leveldown.clear(opts, cb)
+    this.db.clear(opts, cb)
   } else {
     // Fall back to iterator-based implementation
     defaultClear.call(this, opts, cb)
@@ -230,7 +226,7 @@ function fixRange (opts) {
 
 SubDown.prototype._iterator = function (opts) {
   var xopts = extend(wrap(fixRange(opts), this._wrap), opts)
-  return new SubIterator(this, this.leveldown.iterator(xopts), this.prefix)
+  return new SubIterator(this, this.db.iterator(xopts), this.prefix)
 }
 
 module.exports = SubDown

@@ -120,7 +120,7 @@ test('SubDb main function', function (t) {
       t.is(sub.db instanceof encoding, true, 'is encoding-down instance')
       t.is(sub.db.db instanceof subdown, true, 'is subdown instance')
       t.is(sub.db.db.type, 'subleveldown', '.type is subleveldown')
-      t.is(sub.db.db.leveldown instanceof memdown, true, 'memdown')
+      t.is(sub.db.db.db instanceof memdown, true, 'memdown')
       t.end()
     })
   })
@@ -215,11 +215,11 @@ test('SubDb main function', function (t) {
     function verify () {
       t.is(sub1.db instanceof encoding, true, 'sub1 encoding-down')
       t.is(sub1.db.db.prefix, '!test1!', 'sub1 prefix ok')
-      t.is(sub1.db.db.leveldown instanceof memdown, true, 'memdown')
+      t.is(sub1.db.db.db instanceof memdown, true, 'memdown')
       t.is(sub2.db instanceof encoding, true, 'sub2 encoding-down')
       t.is(sub2.db.db.prefix, '!test1!!test2!', 'sub2 prefix ok')
       t.is(sub2.db.db.type, 'subleveldown', '.type is subleveldown')
-      t.is(sub2.db.db.leveldown instanceof memdown, true, 'memdown')
+      t.is(sub2.db.db.db instanceof memdown, true, 'memdown')
     }
   })
 
