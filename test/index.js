@@ -168,6 +168,86 @@ test('SubDb main function', function (t) {
     })
   })
 
+  t.test('wrap opened levelup, close levelup and sublevel', function (t) {
+    t.plan(3)
+
+    levelup(memdown(), function (err, db) {
+      t.ifError(err, 'no open error')
+      var sub = subdb(db, 'test')
+
+      sub.once('open', function () {
+        db.close(function (err) {
+          t.ifError(err, 'no close error')
+        })
+
+        // Technically not needed, but shouldn't error
+        sub.close(function (err) {
+          t.ifError(err, 'no close error')
+        })
+      })
+    })
+  })
+
+  t.test('wrap opened levelup, close levelup and sublevel while sublevel is opening', function (t) {
+    t.plan(7)
+
+    levelup(memdown(), function (err, db) {
+      t.ifError(err, 'no open error')
+      var sub = subdb(db, 'test')
+
+      db.close(function (err) {
+        t.ifError(err, 'no close error')
+        t.is(reachdown(sub, 'subleveldown').status, 'opening') // TODO
+        t.is(reachdown(sub).status, 'closed')
+      })
+
+      // Technically not needed, but shouldn't error
+      sub.close(function (err) {
+        t.ifError(err, 'no close error')
+        t.is(reachdown(sub, 'subleveldown').status, 'closed')
+        t.is(reachdown(sub).status, 'closed')
+      })
+    })
+  })
+
+  t.test('wrap opened levelup, close levelup while sublevel is opening', function (t) {
+    t.plan(4)
+
+    levelup(memdown(), function (err, db) {
+      t.ifError(err, 'no open error')
+      var sub = subdb(db, 'test')
+
+      db.close(function (err) {
+        t.ifError(err, 'no close error')
+        t.is(reachdown(sub, 'subleveldown').status, 'opening') // TODO
+        t.is(reachdown(sub).status, 'closed')
+      })
+    })
+  })
+
+  t.test('wrap closing levelup', function (t) {
+    t.plan(7)
+
+    levelup(memdown(), function (err, db) {
+      t.ifError(err, 'no open error')
+
+      db.close(function (err) {
+        t.ifError(err, 'no close error')
+        t.is(reachdown(sub, 'subleveldown').status, 'opening')
+        t.is(reachdown(sub).status, 'opening')
+
+        sub.on('open', function (err) {
+          t.ifError(err, 'no open error')
+          t.is(reachdown(sub, 'subleveldown').status, 'open')
+          t.is(reachdown(sub).status, 'open')
+        })
+      })
+
+      // Perhaps this should throw instead? It's funky
+      var sub = subdb(db, 'test')
+    })
+  })
+
   t.test('wrap levelup and encoding-down, close sublevel and re-open', function (t) {
     t.plan(3)
     var db = levelup(encoding(memdown()))
