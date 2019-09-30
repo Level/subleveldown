@@ -73,6 +73,14 @@ function SubDown (db, prefix, opts) {
     this.leveldown = reachdown(db, matchdown, false)
   }
 
+  if (reachdown(this.leveldown, 'deferred-leveldown') === this.leveldown) {
+    // When old deferred-leveldown is unopened it doesn't have a reference
+    // to the underlying db yet and we therefore cannot access it.
+    throw new Error('Not compatible with levelup < 2.0.0 / deferred-leveldown < 2.0.0')
+  } else if (!this.leveldown.status) {
+    throw new Error('Not compatible with abstract-leveldown < 2.4.0')
+  }
+
   // For compatibility with reachdown
   // TODO (next major): remove this.leveldown in favor of this.db
   this.db = this.leveldown
