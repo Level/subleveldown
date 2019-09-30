@@ -168,6 +168,29 @@ test('SubDb main function', function (t) {
     })
   })
 
+  t.test('wrap levelup and encoding-down, close sublevel and re-open', function (t) {
+    t.plan(3)
+    var db = levelup(encoding(memdown()))
+
+    db.once('open', function () {
+      var sub = subdb(db, 'test')
+
+      sub.close(function (err) {
+        t.ifError(err, 'no close error')
+
+        // Previously, subleveldown would open a sublevel via levelup yet close
+        // it via the innermost db (memdown). So at this point, the intermediate
+        // encoding-down layer would still be open, leading levelup to believe
+        // that encoding-down and its underlying memdown db need not be opened.
+        // See https://github.com/Level/subleveldown/issues/60.
+        sub.open(function (err) {
+          t.error(err, 'no open error')
+          t.is(reachdown(sub).status, 'open')
+        })
+      })
+    })
+  })
+
   t.test('can wrap a sublevel and reopen the wrapped sublevel', function (t) {
     var db = levelup(memdown())
     var sub1 = subdb(db, 'test1')
