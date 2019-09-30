@@ -47,43 +47,43 @@ suite({
 // Additional tests for this implementation
 test('SubDown constructor', function (t) {
   t.test('can be called without new', function (t) {
-    var sub = subdown()
+    var sub = subdown(memdown())
     t.is(sub instanceof subdown, true, 'instanceof subdown')
     t.end()
   })
   t.test('missing prefix and missing separator', function (t) {
-    var sub = subdown()
+    var sub = subdown(memdown())
     t.is(sub.prefix, '!!')
     t.end()
   })
   t.test('prefix and missing separator', function (t) {
-    var sub = subdown({}, 'prefix')
+    var sub = subdown(memdown(), 'prefix')
     t.is(sub.prefix, '!prefix!')
     t.end()
   })
   t.test('prefix and separator (as string)', function (t) {
-    var sub = subdown({}, 'prefix', '%')
+    var sub = subdown(memdown(), 'prefix', '%')
     t.is(sub.prefix, '%prefix%')
     t.end()
   })
   t.test('prefix and separator (as options)', function (t) {
-    var sub = subdown({}, 'prefix', { separator: '%' })
+    var sub = subdown(memdown(), 'prefix', { separator: '%' })
     t.is(sub.prefix, '%prefix%')
     t.end()
   })
   t.test('prefix with same initial character as separator is sliced', function (t) {
-    var sub = subdown({}, '!prefix')
+    var sub = subdown(memdown(), '!prefix')
     t.is(sub.prefix, '!prefix!')
     t.end()
   })
   t.test('prefix with same ending character as separator is sliced', function (t) {
-    var sub = subdown({}, 'prefix!')
+    var sub = subdown(memdown(), 'prefix!')
     t.is(sub.prefix, '!prefix!')
     t.end()
   })
   // TODO we're currently not guarded by multiple separators in the prefix
   // t.test('repeated separator is slices off from prefix parameter', function (t) {
-  //   var sub = subdown({}, '!!prefix!!')
+  //   var sub = subdown(memdown(), '!!prefix!!')
   //   t.is(sub.prefix, '!prefix!')
   //   t.end()
   // })
@@ -103,6 +103,7 @@ test('SubDb main function', function (t) {
     t.plan(1)
 
     var mockdb = {
+      status: 'new',
       open: function (cb) {
         process.nextTick(cb, new Error('error from underlying store'))
       }
@@ -297,6 +298,7 @@ test('SubDb main function', function (t) {
     t.plan(2)
 
     var mockdb = {
+      status: 'new',
       open: function (cb) {
         process.nextTick(cb)
       },
@@ -467,7 +469,7 @@ test('subleveldown on intermediate layer', function (t) {
   })
 })
 
-test('legacy memdb (old levelup)', function (t) {
+test.skip('legacy memdb (old levelup)', function (t) {
   t.plan(7)
 
   // Should not result in double json encoding

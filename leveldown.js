@@ -48,20 +48,34 @@ function SubDown (db, prefix, opts) {
   if (typeof opts === 'string') opts = { separator: opts }
   if (!opts) opts = {}
 
+  if (!db) {
+    throw new Error('The db argument is required')
+  }
+
   var separator = opts.separator
+  var self = this
 
   if (!prefix) prefix = ''
   if (!separator) separator = '!'
   if (prefix[0] === separator) prefix = prefix.slice(1)
   if (prefix[prefix.length - 1] === separator) prefix = prefix.slice(0, -1)
 
-  this.db = db
-  this.leveldown = null
-  this.ownPrefix = separator + prefix + separator
-  this.prefix = this.ownPrefix
-  this._beforeOpen = opts.open
+  this.prefix = separator + prefix + separator
+  this._beforeOpen = opts.open || process.nextTick
+  this._externalOpener = reachdown(db, 'levelup') === db ? db : null
 
-  var self = this
+  var subdb = reachdown(db, 'subleveldown')
+
+  if (subdb && subdb.prefix) {
+    this.prefix = subdb.prefix + this.prefix
+    this.leveldown = subdb.leveldown
+  } else {
+    this.leveldown = reachdown(db, matchdown, false)
+  }
+
+  // For compatibility with reachdown
+  // TODO (next major): remove this.leveldown in favor of this.db
+  this.db = this.leveldown
 
   this._wrap = {
     gt: function (x) {
@@ -83,25 +97,55 @@ SubDown.prototype.type = 'subleveldown'
 SubDown.prototype._open = function (opts, cb) {
   var self = this
 
-  this.db.open(function (err) {
-    if (err) return cb(err)
-
-    var subdb = reachdown(self.db, 'subleveldown')
-
-    if (subdb && subdb.prefix) {
-      self.prefix = subdb.prefix + self.ownPrefix
-      self.leveldown = subdb.leveldown
-    } else {
-      self.leveldown = reachdown(self.db, matchdown, false)
+  if (this.leveldown.status === 'open') {
+    process.nextTick(finish)
+  } else if (this.leveldown.status === 'opening') {
+    if (!this._externalOpener) {
+      return process.nextTick(cb, new Error('Database was opened by third party'))
     }
 
-    if (self._beforeOpen) self._beforeOpen(cb)
-    else cb()
-  })
+    this._externalOpener.once('open', finish)
+  } else if (this.leveldown.status === 'closing') {
+    if (!this._externalOpener) {
+      return process.nextTick(cb, new Error('Database was closed by third party'))
+    }
+
+    this._externalOpener.once('closed', function () {
+      self._open(opts, cb)
+    })
+  } else {
+    // TODO: pass levelup options?
+    this.leveldown.open(finish)
+  }
+
+  function finish (err) {
+    if (err) return cb(err)
+    self._beforeOpen(cb)
+  }
 }
 
 SubDown.prototype._close = function (cb) {
-  this.leveldown.close(cb)
+  var self = this
+
+  if (this.leveldown.status === 'new' || this.leveldown.status === 'closed') {
+    process.nextTick(cb)
+  } else if (this.leveldown.status === 'closing') {
+    if (!this._externalOpener) {
+      return process.nextTick(cb, new Error('Database was closed by third party'))
+    }
+
+    this._externalOpener.once('closed', cb)
+  } else if (this.leveldown.status === 'opening') {
+    if (!this._externalOpener) {
+      return process.nextTick(cb, new Error('Database was opened by third party'))
+    }
+
+    this._externalOpener.once('open', function () {
+      self._close(cb)
+    })
+  } else {
+    this.leveldown.close(cb)
+  }
 }
 
 SubDown.prototype._serializeKey = function (key) {
