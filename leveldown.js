@@ -101,54 +101,20 @@ SubDown.prototype.type = 'subleveldown'
 SubDown.prototype._open = function (opts, cb) {
   var self = this
 
-  if (this.db.status === 'open') {
-    process.nextTick(finish)
-  } else if (this.db.status === 'opening') {
-    if (!this._externalOpener) {
-      return process.nextTick(cb, new Error('Database was opened by third party'))
-    }
-
-    this._externalOpener.once('open', finish)
-  } else if (this.db.status === 'closing') {
-    if (!this._externalOpener) {
-      return process.nextTick(cb, new Error('Database was closed by third party'))
-    }
-
-    this._externalOpener.once('closed', function () {
-      self._open(opts, cb)
-    })
-  } else {
+  if (this.db.status === 'new') {
     // TODO: pass levelup options?
     this.db.open(finish)
+  } else if (this.db.status === 'opening' && this._externalOpener) {
+    this._externalOpener.once('open', finish)
+  } else {
+    process.nextTick(finish)
   }
 
   function finish (err) {
     if (err) return cb(err)
+    if (self.db.status !== 'open') return cb(new Error('Database is not open'))
+
     self._beforeOpen(cb)
-  }
-}
-
-SubDown.prototype._close = function (cb) {
-  var self = this
-
-  if (this.db.status === 'new' || this.db.status === 'closed') {
-    process.nextTick(cb)
-  } else if (this.db.status === 'closing') {
-    if (!this._externalOpener) {
-      return process.nextTick(cb, new Error('Database was closed by third party'))
-    }
-
-    this._externalOpener.once('closed', cb)
-  } else if (this.db.status === 'opening') {
-    if (!this._externalOpener) {
-      return process.nextTick(cb, new Error('Database was opened by third party'))
-    }
-
-    this._externalOpener.once('open', function () {
-      self._close(cb)
-    })
-  } else {
-    this.db.close(cb)
   }
 }
 

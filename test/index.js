@@ -101,12 +101,11 @@ test('SubDb main function', function (t) {
   t.test('error from open() bubbles up', function (t) {
     t.plan(1)
 
-    var mockdb = {
-      status: 'new',
-      open: function (cb) {
+    var mockdb = mock(abstract.AbstractLevelDOWN, {
+      _open: function (opts, cb) {
         process.nextTick(cb, new Error('error from underlying store'))
       }
-    }
+    })
 
     subdb(mockdb, 'test').on('error', (err) => {
       t.is(err.message, 'error from underlying store')
@@ -152,17 +151,23 @@ test('SubDb main function', function (t) {
   })
 
   t.test('wrap a closed levelup and re-open levelup', function (t) {
-    t.plan(3)
+    t.plan(4)
     var db = levelup(memdown())
     db.once('open', function () {
       db.close(function (err) {
         t.error(err, 'no error')
-        var sub = subdb(db, 'test')
-        sub.once('open', function () {
-          t.pass('subdb openen')
+
+        // Can't create a sublevel at this point
+        subdb(db, 'test').on('error', function (err) {
+          t.is(err.message, 'Database is not open', 'sublevel not opened')
         })
+
         db.open(function (err) {
           t.error(err, 'no error')
+
+          subdb(db, 'test').on('open', function () {
+            t.pass('sublevel opened')
+          })
         })
       })
     })
@@ -180,7 +185,7 @@ test('SubDb main function', function (t) {
           t.ifError(err, 'no close error')
         })
 
-        // Technically not needed, but shouldn't error
+        // Not needed, but shouldn't error
         sub.close(function (err) {
           t.ifError(err, 'no close error')
         })
@@ -189,44 +194,49 @@ test('SubDb main function', function (t) {
   })
 
   t.test('wrap opened levelup, close levelup and sublevel while sublevel is opening', function (t) {
-    t.plan(7)
+    t.plan(5)
 
     levelup(memdown(), function (err, db) {
       t.ifError(err, 'no open error')
       var sub = subdb(db, 'test')
 
+      sub.on('error', (err) => {
+        t.is(err.message, 'Database is not open')
+      })
+
       db.close(function (err) {
         t.ifError(err, 'no close error')
-        t.is(reachdown(sub, 'subleveldown').status, 'opening') // TODO
+        t.is(reachdown(sub, 'subleveldown').status, 'new')
         t.is(reachdown(sub).status, 'closed')
       })
 
-      // Technically not needed, but shouldn't error
-      sub.close(function (err) {
-        t.ifError(err, 'no close error')
-        t.is(reachdown(sub, 'subleveldown').status, 'closed')
-        t.is(reachdown(sub).status, 'closed')
+      sub.close(function () {
+        t.fail('should not be called, because opening never finished')
       })
     })
   })
 
   t.test('wrap opened levelup, close levelup while sublevel is opening', function (t) {
-    t.plan(4)
+    t.plan(5)
 
     levelup(memdown(), function (err, db) {
       t.ifError(err, 'no open error')
       var sub = subdb(db, 'test')
 
+      sub.on('error', (err) => {
+        t.is(err.message, 'Database is not open')
+      })
+
       db.close(function (err) {
         t.ifError(err, 'no close error')
-        t.is(reachdown(sub, 'subleveldown').status, 'opening') // TODO
+        t.is(reachdown(sub, 'subleveldown').status, 'new')
         t.is(reachdown(sub).status, 'closed')
       })
     })
   })
 
   t.test('wrap closing levelup', function (t) {
-    t.plan(7)
+    t.plan(6)
 
     levelup(memdown(), function (err, db) {
       t.ifError(err, 'no open error')
@@ -234,17 +244,19 @@ test('SubDb main function', function (t) {
       db.close(function (err) {
         t.ifError(err, 'no close error')
         t.is(reachdown(sub, 'subleveldown').status, 'opening')
-        t.is(reachdown(sub).status, 'opening')
+        t.is(reachdown(sub).status, 'closed')
 
-        sub.on('open', function (err) {
-          t.ifError(err, 'no open error')
-          t.is(reachdown(sub, 'subleveldown').status, 'open')
-          t.is(reachdown(sub).status, 'open')
+        sub.on('error', (err) => {
+          t.is(err.message, 'Database is not open')
+          t.is(reachdown(sub, 'subleveldown').status, 'new')
         })
       })
 
-      // Perhaps this should throw instead? It's funky
       var sub = subdb(db, 'test')
+
+      sub.on('open', function () {
+        t.fail('should not open')
+      })
     })
   })
 
@@ -376,12 +388,8 @@ test('SubDb main function', function (t) {
   t.test('errors from iterator bubble up', function (t) {
     t.plan(2)
 
-    var mockdb = {
-      status: 'new',
-      open: function (cb) {
-        process.nextTick(cb)
-      },
-      iterator: function () {
+    var mockdb = mock(abstract.AbstractLevelDOWN, {
+      _iterator: function () {
         return {
           next: function (cb) {
             process.nextTick(cb, new Error('next() error from underlying store'))
@@ -391,7 +399,7 @@ test('SubDb main function', function (t) {
           }
         }
       }
-    }
+    })
 
     var sub = subdb(mockdb, 'test')
     var it = sub.iterator()
@@ -550,4 +558,23 @@ test('subleveldown on intermediate layer', function (t) {
 
 function getKey (entry) {
   return entry.key
+}
+
+function implement (ctor, methods) {
+  function Test () {
+    ctor.apply(this, arguments)
+  }
+
+  inherits(Test, ctor)
+
+  for (var k in methods) {
+    Test.prototype[k] = methods[k]
+  }
+
+  return Test
+}
+
+function mock (ctor, methods) {
+  var Test = implement(ctor, methods)
+  return new Test()
 }
