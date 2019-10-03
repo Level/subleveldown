@@ -108,11 +108,7 @@ test('SubDb main function', function (t) {
       }
     }
 
-    subdb(mockdb, 'test')
-
-    // Awkward: we don't pass a callback to levelup() so levelup goes
-    // into "promise mode" which we can't catch properly
-    process.once('unhandledRejection', (err) => {
+    subdb(mockdb, 'test').on('error', (err) => {
       t.is(err.message, 'error from underlying store')
     })
   })
