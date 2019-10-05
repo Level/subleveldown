@@ -124,7 +124,7 @@ test('SubDb main function', function (t) {
     })
   })
 
-  t.test('different sub levels can have different encodings', function (t) {
+  t.test('different sublevels can have different encodings', function (t) {
     t.plan(6)
     var db = levelup(memdown())
     var sub1 = subdb(db, 'test1', {
@@ -150,14 +150,13 @@ test('SubDb main function', function (t) {
     })
   })
 
-  t.test('wrap a closed levelup and re-open levelup', function (t) {
+  t.test('cannot create a sublevel on a closed db', function (t) {
     t.plan(4)
     var db = levelup(memdown())
     db.once('open', function () {
       db.close(function (err) {
         t.error(err, 'no error')
 
-        // Can't create a sublevel at this point
         subdb(db, 'test').on('error', function (err) {
           t.is(err.message, 'Database is not open', 'sublevel not opened')
         })
@@ -173,7 +172,7 @@ test('SubDb main function', function (t) {
     })
   })
 
-  t.test('wrap opened levelup, close levelup and sublevel', function (t) {
+  t.test('can close db and sublevel once opened', function (t) {
     t.plan(3)
 
     levelup(memdown(), function (err, db) {
@@ -193,7 +192,7 @@ test('SubDb main function', function (t) {
     })
   })
 
-  t.test('wrap opened levelup, close levelup and sublevel while sublevel is opening', function (t) {
+  t.test('cannot close db while sublevel is opening', function (t) {
     t.plan(5)
 
     levelup(memdown(), function (err, db) {
@@ -216,26 +215,7 @@ test('SubDb main function', function (t) {
     })
   })
 
-  t.test('wrap opened levelup, close levelup while sublevel is opening', function (t) {
-    t.plan(5)
-
-    levelup(memdown(), function (err, db) {
-      t.ifError(err, 'no open error')
-      var sub = subdb(db, 'test')
-
-      sub.on('error', (err) => {
-        t.is(err.message, 'Database is not open')
-      })
-
-      db.close(function (err) {
-        t.ifError(err, 'no close error')
-        t.is(reachdown(sub, 'subleveldown').status, 'new')
-        t.is(reachdown(sub).status, 'closed')
-      })
-    })
-  })
-
-  t.test('wrap closing levelup', function (t) {
+  t.test('cannot create sublevel while db is closing', function (t) {
     t.plan(6)
 
     levelup(memdown(), function (err, db) {
@@ -260,7 +240,7 @@ test('SubDb main function', function (t) {
     })
   })
 
-  t.test('wrap levelup and encoding-down, close sublevel and re-open', function (t) {
+  t.test('can reopen a sublevel without affecting encoding-down state of db', function (t) {
     t.plan(3)
     var db = levelup(encoding(memdown()))
 
