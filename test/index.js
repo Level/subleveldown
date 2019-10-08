@@ -168,11 +168,28 @@ test('SubDb main function', function (t) {
     })
   })
 
-  t.test('wrapping a sub level', function (t) {
+  t.test('can wrap a sublevel and reopen the wrapped sublevel', function (t) {
     var db = levelup(memdown())
     var sub1 = subdb(db, 'test1')
     var sub2 = subdb(sub1, 'test2')
+
     sub2.once('open', function () {
+      verify()
+
+      sub2.close(function (err) {
+        t.ifError(err, 'no close error')
+
+        // Prefixes should be the same after closing & reopening
+        // See https://github.com/Level/subleveldown/issues/78
+        sub2.open(function (err) {
+          t.ifError(err, 'no open error')
+          verify()
+          t.end()
+        })
+      })
+    })
+
+    function verify () {
       t.is(sub1.db instanceof encoding, true, 'sub1 encoding-down')
       t.is(sub1.db.db.prefix, '!test1!', 'sub1 prefix ok')
       t.is(sub1.db.db.leveldown instanceof memdown, true, 'memdown')
@@ -180,8 +197,35 @@ test('SubDb main function', function (t) {
       t.is(sub2.db.db.prefix, '!test1!!test2!', 'sub2 prefix ok')
       t.is(sub2.db.db.type, 'subleveldown', '.type is subleveldown')
       t.is(sub2.db.db.leveldown instanceof memdown, true, 'memdown')
-      t.end()
-    })
+    }
+  })
+
+  // See https://github.com/Level/subleveldown/issues/78
+  t.test('doubly nested sublevel has correct prefix', function (t) {
+    t.plan(3)
+
+    var db = levelup(encoding(memdown()))
+    var sub1 = subdb(db, '1')
+    var sub2 = subdb(sub1, '2')
+    var sub3 = subdb(sub2, '3')
+    var next = after(3, verify)
+
+    sub1.put('a', 'value', next)
+    sub2.put('b', 'value', next)
+    sub3.put('c', 'value', next)
+
+    function verify (err) {
+      t.ifError(err)
+
+      concat(db.iterator(), function (err, entries) {
+        t.ifError(err)
+        t.same(entries.map(getKey), [
+          '!1!!2!!3!c',
+          '!1!!2!b',
+          '!1!a'
+        ])
+      })
+    }
   })
 
   t.test('iterator options are forwarded (issue #1)', function (t) {
