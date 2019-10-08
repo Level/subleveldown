@@ -2,6 +2,13 @@
 
 _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
+## [4.1.4] - 2019-10-08
+
+### Fixed
+
+- Fix double prefixes ([#81](https://github.com/level/subleveldown/issues/81)) ([**@vweevers**](https://github.com/vweevers))
+- Fix `open()` test ([#80](https://github.com/level/subleveldown/issues/80)) ([**@vweevers**](https://github.com/vweevers))
+
 ## [4.1.3] - 2019-09-17
 
 ### Changed
@@ -220,6 +227,8 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 ## 1.0.0 - 2014-12-23
 
 :seedling: Initial release.
+
+[4.1.4]: https://github.com/level/subleveldown/compare/v4.1.3...v4.1.4
 
 [4.1.3]: https://github.com/level/subleveldown/compare/v4.1.2...v4.1.3
 
