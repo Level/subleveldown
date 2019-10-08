@@ -90,7 +90,7 @@ SubDown.prototype._open = function (opts, cb) {
 
     if (subdb && subdb.prefix) {
       self.prefix = subdb.prefix + self.ownPrefix
-      self.leveldown = subdb.leveldown || reachdown(subdb.db, matchdown, false)
+      self.leveldown = subdb.leveldown
     } else {
       self.leveldown = reachdown(self.db, matchdown, false)
     }
