@@ -57,7 +57,8 @@ function SubDown (db, prefix, opts) {
 
   this.db = db
   this.leveldown = null
-  this.prefix = separator + prefix + separator
+  this.ownPrefix = separator + prefix + separator
+  this.prefix = this.ownPrefix
   this._beforeOpen = opts.open
 
   var self = this
@@ -88,8 +89,8 @@ SubDown.prototype._open = function (opts, cb) {
     var subdb = reachdown(self.db, 'subleveldown')
 
     if (subdb && subdb.prefix) {
-      self.prefix = subdb.prefix + self.prefix
-      self.leveldown = reachdown(subdb.db, matchdown, false)
+      self.prefix = subdb.prefix + self.ownPrefix
+      self.leveldown = subdb.leveldown
     } else {
       self.leveldown = reachdown(self.db, matchdown, false)
     }
