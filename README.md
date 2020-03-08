@@ -87,7 +87,7 @@ The `prefix` must be a string. If omitted, the effective prefix is two separator
 
 The optional `options` parameter has the following `subleveldown` specific properties:
 
-- `separator` _(string, default: `'!'`)_ Character for separating sublevel prefixes from user keys and each other. Must sort before characters used in prefixes.
+- `separator` _(string, default: `'!'`)_ Character for separating sublevel prefixes from user keys and each other. Must sort before characters used in prefixes. An error will be thrown if that's not the case.
 - `open` _(function)_ Optional open hook called when the underlying `levelup` instance has been opened. The hook receives a callback which must be called to finish opening.
 
 Any other `options` are passed along to the underlying [`levelup`][levelup] and [`encoding-down`][encoding-down] constructors. See their documentation for further details.
