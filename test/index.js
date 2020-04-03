@@ -13,35 +13,39 @@ var abstract = require('abstract-leveldown')
 var inherits = require('util').inherits
 
 // Test abstract-leveldown compliance
-suite({
-  test: test,
-  factory: function () {
-    return subdown(levelup(memdown()), 'test')
-  },
+function runSuite (factory) {
+  suite({
+    test: test,
+    factory: factory,
 
-  // Unsupported features
-  seek: false,
-  createIfMissing: false,
-  errorIfExists: false,
+    // Unsupported features
+    seek: false,
+    createIfMissing: false,
+    errorIfExists: false,
 
-  // Opt-in to new clear() tests
-  clear: true
+    // Opt-in to new clear() tests
+    clear: true
+  })
+}
+
+// Test basic prefix
+runSuite(function factory () {
+  return subdown(levelup(memdown()), 'test')
+})
+
+// Test empty prefix
+runSuite(function factory () {
+  return subdown(levelup(memdown()), '')
+})
+
+// Test custom separator
+runSuite(function factory () {
+  return subdown(levelup(memdown()), 'test', { separator: '%' })
 })
 
 // Test without a user-provided levelup layer
-suite({
-  test: test,
-  factory: function () {
-    return subdown(memdown(), 'test')
-  },
-
-  // Unsupported features
-  seek: false,
-  createIfMissing: false,
-  errorIfExists: false,
-
-  // Opt-in to new clear() tests
-  clear: true
+runSuite(function factory () {
+  return subdown(memdown(), 'test')
 })
 
 // Additional tests for this implementation
@@ -401,6 +405,66 @@ test('SubDb main function', function (t) {
       })
     }
   }
+})
+
+// https://github.com/Level/subleveldown/issues/87
+test('can store any key', function (t) {
+  t.test('iterating buffer keys with bytes above 196', function (t) {
+    t.plan(3)
+
+    var db = levelup(memdown())
+    var sub = subdb(db, 'test', { keyEncoding: 'binary' })
+
+    sub.once('open', function () {
+      const batch = sub.batch()
+
+      for (let i = 0; i < 256; i++) {
+        batch.put(Buffer.from([i]), 'test')
+      }
+
+      batch.write(function (err) {
+        t.ifError(err, 'no write error')
+
+        concat(sub.iterator(), function (err, entries) {
+          t.ifError(err, 'no concat error')
+          t.is(entries.length, 256, 'sub yields all entries')
+        })
+      })
+    })
+  })
+
+  t.test('range logic', function (t) {
+    const db = levelup(memdown())
+    const a = subdb(db, 'a', { separator: '#' })
+    const aA = subdb(a, 'a', { separator: '#' })
+    const b = subdb(db, 'b', { separator: '#' })
+    const next = after(3, verify)
+
+    a.once('open', next)
+    aA.once('open', next)
+    b.once('open', next)
+
+    function wrapper (sub) {
+      return reachdown(sub, 'subleveldown')._wrap
+    }
+
+    function verify () {
+      const ranges = [
+        wrapper(a).gt(),
+        wrapper(aA).gt(),
+        wrapper(aA).lt(),
+        wrapper(a).lt(),
+        wrapper(b).gt(),
+        wrapper(b).lt()
+      ]
+
+      t.same(ranges, ['#a#', '#a##a#', '#a##a$', '#a$', '#b#', '#b$'])
+      t.same(ranges.slice().sort(), ranges)
+      t.end()
+    }
+  })
+
+  t.end()
 })
 
 // Test that we peel off the levelup, deferred-leveldown and encoding-down

@@ -7,7 +7,6 @@ var matchdown = require('./matchdown')
 var rangeOptions = 'start end gt gte lt lte'.split(' ')
 var defaultClear = abstract.AbstractLevelDOWN.prototype._clear
 var hasOwnProperty = Object.prototype.hasOwnProperty
-var END = Buffer.from([0xff])
 
 function concat (prefix, key, force) {
   if (typeof key === 'string' && (force || key.length)) return prefix + key
@@ -55,6 +54,15 @@ function SubDown (db, prefix, opts) {
   if (prefix[0] === separator) prefix = prefix.slice(1)
   if (prefix[prefix.length - 1] === separator) prefix = prefix.slice(0, -1)
 
+  var code = separator.charCodeAt(0) + 1
+  var ceiling = String.fromCharCode(code)
+
+  Buffer.from(prefix).forEach(function (byte) {
+    if (byte <= code) {
+      throw new RangeError('Prefix must sort after ' + code)
+    }
+  })
+
   this.db = db
   this.leveldown = null
   this.ownPrefix = separator + prefix + separator
@@ -68,8 +76,11 @@ function SubDown (db, prefix, opts) {
       return concat(self.prefix, x || '', true)
     },
     lt: function (x) {
-      if (Buffer.isBuffer(x) && !x.length) x = END
-      return concat(self.prefix, x || '\xff')
+      if (!x || isEmptyBuffer(x)) {
+        return self.prefix.slice(0, -1) + ceiling
+      } else {
+        return concat(self.prefix, x)
+      }
     }
   }
 
@@ -152,6 +163,10 @@ function addRestOptions (target, opts) {
 
 function isRangeOption (k) {
   return rangeOptions.indexOf(k) !== -1
+}
+
+function isEmptyBuffer (key) {
+  return Buffer.isBuffer(key) && key.length === 0
 }
 
 // TODO (refactor): use addRestOptions instead
