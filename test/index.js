@@ -8,9 +8,9 @@ var subdown = require('../leveldown')
 var subdb = require('..')
 var levelup = require('levelup')
 var reachdown = require('reachdown')
-var memdb = require('memdb')
 var abstract = require('abstract-leveldown')
 var inherits = require('util').inherits
+var EventEmitter = require('events')
 
 // Test abstract-leveldown compliance
 function runSuite (factory) {
@@ -45,49 +45,66 @@ runSuite(function factory () {
 
 // Test without a user-provided levelup layer
 runSuite(function factory () {
-  return subdown(memdown(), 'test')
+  var down = memdown()
+  var emitter = new EventEmitter()
+
+  if (!down.supports.deferredOpen) {
+    // Simulate a future abstract-leveldown that
+    // supports deferredOpen just like levelup
+    down.supports.deferredOpen = true
+    down.isOpen = function () { return this.status === 'open' }
+    down.isOpening = function () { return this.status === 'opening' }
+    down.once = emitter.once.bind(emitter)
+    down.open(function (err) {
+      if (err) throw err
+      emitter.emit('open')
+    })
+    down.open = function () { throw new Error('Explicit open is not simulated') }
+  }
+
+  return subdown(down, 'test')
 })
 
 // Additional tests for this implementation
 test('SubDown constructor', function (t) {
   t.test('can be called without new', function (t) {
-    var sub = subdown()
+    var sub = subdown(levelup(memdown()))
     t.is(sub instanceof subdown, true, 'instanceof subdown')
     t.end()
   })
   t.test('missing prefix and missing separator', function (t) {
-    var sub = subdown()
+    var sub = subdown(levelup(memdown()))
     t.is(sub.prefix, '!!')
     t.end()
   })
   t.test('prefix and missing separator', function (t) {
-    var sub = subdown({}, 'prefix')
+    var sub = subdown(levelup(memdown()), 'prefix')
     t.is(sub.prefix, '!prefix!')
     t.end()
   })
   t.test('prefix and separator (as string)', function (t) {
-    var sub = subdown({}, 'prefix', '%')
+    var sub = subdown(levelup(memdown()), 'prefix', '%')
     t.is(sub.prefix, '%prefix%')
     t.end()
   })
   t.test('prefix and separator (as options)', function (t) {
-    var sub = subdown({}, 'prefix', { separator: '%' })
+    var sub = subdown(levelup(memdown()), 'prefix', { separator: '%' })
     t.is(sub.prefix, '%prefix%')
     t.end()
   })
   t.test('prefix with same initial character as separator is sliced', function (t) {
-    var sub = subdown({}, '!prefix')
+    var sub = subdown(levelup(memdown()), '!prefix')
     t.is(sub.prefix, '!prefix!')
     t.end()
   })
   t.test('prefix with same ending character as separator is sliced', function (t) {
-    var sub = subdown({}, 'prefix!')
+    var sub = subdown(levelup(memdown()), 'prefix!')
     t.is(sub.prefix, '!prefix!')
     t.end()
   })
   // TODO we're currently not guarded by multiple separators in the prefix
   // t.test('repeated separator is slices off from prefix parameter', function (t) {
-  //   var sub = subdown({}, '!!prefix!!')
+  //   var sub = subdown(levelup(memdown()), '!!prefix!!')
   //   t.is(sub.prefix, '!prefix!')
   //   t.end()
   // })
@@ -103,17 +120,24 @@ test('SubDb main function', function (t) {
     })
   })
 
-  t.test('error from open() bubbles up', function (t) {
+  t.test('error from open() does not bubble up', function (t) {
     t.plan(1)
 
-    var mockdb = {
-      open: function (cb) {
+    var mockdb = mock(abstract.AbstractLevelDOWN, {
+      _open: function (opts, cb) {
         process.nextTick(cb, new Error('error from underlying store'))
       }
-    }
+    })
 
-    subdb(mockdb, 'test').on('error', (err) => {
+    var db = levelup(mockdb)
+    var sub = subdb(db, 'test')
+
+    db.on('error', (err) => {
       t.is(err.message, 'error from underlying store')
+    })
+
+    sub.on('error', (err) => {
+      t.fail(err)
     })
   })
 
@@ -155,18 +179,145 @@ test('SubDb main function', function (t) {
     })
   })
 
-  t.test('wrap a closed levelup and re-open levelup', function (t) {
-    t.plan(3)
+  t.test('cannot create a sublevel on a closed db', function (t) {
+    t.plan(4)
     var db = levelup(memdown())
     db.once('open', function () {
       db.close(function (err) {
         t.error(err, 'no error')
-        var sub = subdb(db, 'test')
-        sub.once('open', function () {
-          t.pass('subdb openen')
+
+        subdb(db, 'test').on('error', function (err) {
+          t.is(err.message, 'Parent database is not open', 'sublevel not opened')
         })
+
         db.open(function (err) {
           t.error(err, 'no error')
+
+          subdb(db, 'test').on('open', function () {
+            t.pass('sublevel opened')
+          })
+        })
+      })
+    })
+  })
+
+  t.test('can close db and sublevel once opened', function (t) {
+    t.plan(3)
+
+    levelup(memdown(), function (err, db) {
+      t.ifError(err, 'no open error')
+      var sub = subdb(db, 'test')
+
+      sub.once('open', function () {
+        db.close(function (err) {
+          t.ifError(err, 'no close error')
+        })
+
+        sub.close(function (err) {
+          t.ifError(err, 'no close error')
+        })
+      })
+    })
+  })
+
+  t.test('rejects operations if parent db is closed', function (t) {
+    t.plan(9)
+
+    levelup(memdown(), function (err, db) {
+      t.ifError(err, 'no open error')
+
+      var sub = subdb(db, 'test')
+      var it = sub.iterator()
+
+      sub.once('open', function () {
+        db.close(function (err) {
+          t.ifError(err, 'no close error')
+
+          sub.put('foo', 'bar', verify)
+          sub.get('foo', verify)
+          sub.del('foo', verify)
+          sub.clear(verify)
+          sub.batch([{ type: 'del', key: 'foo' }], verify)
+
+          it.next(function (err) {
+            verify(err)
+            it.end(verify)
+          })
+
+          function verify (err) {
+            t.is(err.message, 'Database is not open')
+          }
+        })
+      })
+    })
+  })
+
+  t.test('cannot close db while sublevel is opening', function (t) {
+    t.plan(5)
+
+    levelup(memdown(), function (err, db) {
+      t.ifError(err, 'no open error')
+      var sub = subdb(db, 'test')
+
+      sub.on('error', (err) => {
+        t.is(err.message, 'Parent database is not open')
+      })
+
+      db.close(function (err) {
+        t.ifError(err, 'no close error')
+        t.is(reachdown(sub, 'subleveldown').status, 'new')
+        t.is(reachdown(sub).status, 'closed')
+      })
+
+      sub.close(function () {
+        t.fail('should not be called, because opening never finished')
+      })
+    })
+  })
+
+  t.test('cannot create sublevel while db is closing', function (t) {
+    t.plan(6)
+
+    levelup(memdown(), function (err, db) {
+      t.ifError(err, 'no open error')
+
+      db.close(function (err) {
+        t.ifError(err, 'no close error')
+        t.is(reachdown(sub, 'subleveldown').status, 'opening')
+        t.is(reachdown(sub).status, 'closed')
+
+        sub.on('error', (err) => {
+          t.is(err.message, 'Parent database is not open')
+          t.is(reachdown(sub, 'subleveldown').status, 'new')
+        })
+      })
+
+      var sub = subdb(db, 'test')
+
+      sub.on('open', function () {
+        t.fail('should not open')
+      })
+    })
+  })
+
+  t.test('can reopen a sublevel without affecting encoding-down state of db', function (t) {
+    t.plan(3)
+    var db = levelup(encoding(memdown()))
+
+    db.once('open', function () {
+      var sub = subdb(db, 'test')
+
+      sub.close(function (err) {
+        t.ifError(err, 'no close error')
+
+        // Previously, subleveldown would open a sublevel via levelup yet close
+        // it via the innermost db (memdown). So at this point, the intermediate
+        // encoding-down layer would still be open, leading levelup to believe
+        // that encoding-down and its underlying memdown db need not be opened.
+        // See https://github.com/Level/subleveldown/issues/60.
+        sub.open(function (err) {
+          t.error(err, 'no open error')
+          t.is(reachdown(sub).status, 'open')
         })
       })
     })
@@ -277,11 +428,8 @@ test('SubDb main function', function (t) {
   t.test('errors from iterator bubble up', function (t) {
     t.plan(2)
 
-    var mockdb = {
-      open: function (cb) {
-        process.nextTick(cb)
-      },
-      iterator: function () {
+    var mockdb = mock(abstract.AbstractLevelDOWN, {
+      _iterator: function () {
         return {
           next: function (cb) {
             process.nextTick(cb, new Error('next() error from underlying store'))
@@ -291,9 +439,9 @@ test('SubDb main function', function (t) {
           }
         }
       }
-    }
+    })
 
-    var sub = subdb(mockdb, 'test')
+    var sub = subdb(levelup(mockdb), 'test')
     var it = sub.iterator()
 
     it.next(function (err) {
@@ -508,37 +656,25 @@ test('subleveldown on intermediate layer', function (t) {
   })
 })
 
-test('legacy memdb (old levelup)', function (t) {
-  t.plan(7)
-
-  // Should not result in double json encoding
-  var db = memdb({ valueEncoding: 'json' })
-  var sub = subdb(db, 'test', { valueEncoding: 'json' })
-
-  // Integration with memdb still works because subleveldown waits to reachdown
-  // until the (old levelup) db is open. Reaching down then correctly lands on
-  // the memdown db. If subleveldown were to reachdown immediately it'd land on
-  // the old deferred-leveldown (which when unopened doesn't have a reference to
-  // the memdown db yet) so we'd be unable to persist anything.
-  t.is(Object.getPrototypeOf(reachdown(db)).constructor.name, 'DeferredLevelDOWN')
-
-  sub.put('key', { a: 1 }, function (err) {
-    t.ifError(err, 'no put error')
-
-    sub.get('key', function (err, value) {
-      t.ifError(err, 'no get error')
-      t.same(value, { a: 1 })
-    })
-
-    t.is(Object.getPrototypeOf(reachdown(db)).constructor.name, 'MemDOWN')
-
-    reachdown(db).get('!test!key', { asBuffer: false }, function (err, value) {
-      t.ifError(err, 'no get error')
-      t.is(value, '{"a":1}')
-    })
-  })
-})
-
 function getKey (entry) {
   return entry.key
+}
+
+function implement (ctor, methods) {
+  function Test () {
+    ctor.apply(this, arguments)
+  }
+
+  inherits(Test, ctor)
+
+  for (var k in methods) {
+    Test.prototype[k] = methods[k]
+  }
+
+  return Test
+}
+
+function mock (ctor, methods) {
+  var Test = implement(ctor, methods)
+  return new Test()
 }
