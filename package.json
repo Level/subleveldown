@@ -16,11 +16,11 @@
     "test": "test"
   },
   "dependencies": {
-    "abstract-leveldown": "^6.2.3",
+    "abstract-leveldown": "github:Level/abstract-leveldown#0a61ef4",
     "encoding-down": "^6.2.0",
     "inherits": "^2.0.3",
     "level-option-wrap": "^1.1.0",
-    "levelup": "^4.3.1",
+    "levelup": "github:Level/levelup#19e1967",
     "reachdown": "^1.1.0"
   },
   "devDependencies": {
