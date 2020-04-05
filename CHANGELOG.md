@@ -2,6 +2,17 @@
 
 _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
+## [5.0.0] - 2020-04-05
+
+### Changed
+
+- **Breaking:** parent db must support deferredOpen ([#89](https://github.com/level/subleveldown/issues/89)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `dependency-check` devDependency from `^3.3.0` to `^4.1.0` ([`b47f991`](https://github.com/level/subleveldown/commit/b47f991)) ([**@vweevers**](https://github.com/vweevers))
+
+### Fixed
+
+- **Breaking:** fix iterating buffer keys that contain bytes 196-255 ([#88](https://github.com/level/subleveldown/issues/88)) ([**@vweevers**](https://github.com/vweevers))
+
 ## [4.1.4] - 2019-10-08
 
 ### Fixed
@@ -227,6 +238,8 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 ## 1.0.0 - 2014-12-23
 
 :seedling: Initial release.
+
+[5.0.0]: https://github.com/level/subleveldown/compare/v4.1.4...v5.0.0
 
 [4.1.4]: https://github.com/level/subleveldown/compare/v4.1.3...v4.1.4
 
