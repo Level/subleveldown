@@ -16,7 +16,7 @@
     "test": "test"
   },
   "dependencies": {
-    "abstract-leveldown": "github:Level/abstract-leveldown#0a61ef4",
+    "abstract-leveldown": "^6.3.0",
     "encoding-down": "^6.2.0",
     "inherits": "^2.0.3",
     "level-option-wrap": "^1.1.0",
