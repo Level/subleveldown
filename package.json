@@ -20,7 +20,7 @@
     "encoding-down": "^6.2.0",
     "inherits": "^2.0.3",
     "level-option-wrap": "^1.1.0",
-    "levelup": "github:Level/levelup#19e1967",
+    "levelup": "^4.4.0",
     "reachdown": "^1.1.0"
   },
   "devDependencies": {
