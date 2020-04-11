@@ -65,6 +65,28 @@ runSuite(function factory () {
   return subdown(down, 'test')
 })
 
+// Test levelup interface
+suite({
+  test: test,
+  factory: function () {
+    // This is a levelup instance, but we're testing it as abstract-leveldown :)
+    return subdb(levelup(encoding(memdown())), 'test')
+  },
+  // Unsupported features
+  seek: false,
+  createIfMissing: false,
+  errorIfExists: false,
+
+  // Opt-in to new clear() tests
+  clear: true,
+
+  // Adapt for levelup
+  promises: true,
+  status: false,
+  serialize: false,
+  encodings: true
+})
+
 // Additional tests for this implementation
 test('SubDown constructor', function (t) {
   t.test('can be called without new', function (t) {
