@@ -15,8 +15,8 @@ var EventEmitter = require('events')
 // Test abstract-leveldown compliance
 function runSuite (factory) {
   suite({
-    test: test,
-    factory: factory,
+    test,
+    factory,
 
     // Unsupported features
     seek: false,
@@ -67,7 +67,7 @@ runSuite(function factory () {
 
 // Test levelup interface
 suite({
-  test: test,
+  test,
   factory: function () {
     // This is a levelup instance, but we're testing it as abstract-leveldown :)
     return subdb(levelup(encoding(memdown())), 'test')
