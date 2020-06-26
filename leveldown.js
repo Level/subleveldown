@@ -32,7 +32,7 @@ SubIterator.prototype._next = function (cb) {
   this.iterator.next(function (err, key, value) {
     if (err) return cb(err)
     if (key) key = key.slice(self.prefix.length)
-    cb.apply(null, arguments)
+    cb(err, key, value)
   })
 }
 
