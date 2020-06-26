@@ -2,6 +2,16 @@
 
 _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
+## [5.0.1] - 2020-06-26
+
+### Added
+
+- Run `abstract-leveldown` tests on `levelup` interface ([#90](https://github.com/level/subleveldown/issues/90)) ([`8928189`](https://github.com/level/subleveldown/commit/8928189)) ([**@vweevers**](https://github.com/vweevers))
+
+### Fixed
+
+- Don't mutate arguments object, which fails in strict mode ([#93](https://github.com/level/subleveldown/issues/93)) ([`5513c83`](https://github.com/level/subleveldown/commit/5513c83)) ([**@andymatuschak**](https://github.com/andymatuschak))
+
 ## [5.0.0] - 2020-04-05
 
 ### Changed
@@ -238,6 +248,8 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 ## 1.0.0 - 2014-12-23
 
 :seedling: Initial release.
+
+[5.0.1]: https://github.com/level/subleveldown/compare/v5.0.0...v5.0.1
 
 [5.0.0]: https://github.com/level/subleveldown/compare/v4.1.4...v5.0.0
 
