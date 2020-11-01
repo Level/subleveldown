@@ -44,8 +44,10 @@ The `example` and `nested` db's are just regular [`levelup`][levelup] instances:
 ```js
 example.put('hello', 'world', function () {
   nested.put('hi', 'welt', function () {
-    // will print {key:'hello', value:'world'}
+    // stream all data from the parent
     example.createReadStream().on('data', console.log)
+    // { key: '!nested!hi', value: 'welt' }
+    // {key:'hello', value:'world'}
   })
 })
 ```
