@@ -19,9 +19,12 @@
 - [Usage](#usage)
 - [Background](#background)
 - [API](#api)
+  - [`subdb = sub(db[, prefix][, options])`](#subdb--subdb-prefix-options)
 - [Install](#install)
 - [Contributing](#contributing)
 - [Donate](#donate)
+  - [Backers](#backers)
+  - [Sponsors](#sponsors)
 - [License](#license)
 
 </details>
