@@ -7,7 +7,7 @@
   "main": "index.js",
   "scripts": {
     "test": "standard && hallmark && (nyc -s node test | faucet) && nyc report",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "coverage": "nyc report -r lcovonly",
     "hallmark": "hallmark --fix",
     "dependency-check": "dependency-check --no-dev .",
     "prepublishOnly": "npm run dependency-check"
