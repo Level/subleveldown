@@ -7,7 +7,7 @@
 [![Node version](https://img.shields.io/node/v/subleveldown.svg)](https://www.npmjs.com/package/subleveldown)
 [![Travis](https://img.shields.io/travis/com/Level/subleveldown.svg?logo=travis&label=)](https://travis-ci.com/Level/subleveldown)
 [![npm](https://img.shields.io/npm/dm/subleveldown.svg?label=dl)](https://www.npmjs.com/package/subleveldown)
-[![Coverage Status](https://coveralls.io/repos/github/Level/subleveldown/badge.svg)](https://coveralls.io/github/Level/subleveldown)
+[![codecov](https://codecov.io/gh/Level/level-js/branch/master/graph/badge.svg)](https://codecov.io/gh/Level/subleveldown)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![Backers on Open Collective](https://opencollective.com/level/backers/badge.svg?color=orange)](#backers)
 [![Sponsors on Open Collective](https://opencollective.com/level/sponsors/badge.svg?color=orange)](#sponsors)
