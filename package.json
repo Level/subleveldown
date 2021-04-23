@@ -25,7 +25,6 @@
   },
   "devDependencies": {
     "after": "^0.8.2",
-    "coveralls": "^3.0.2",
     "dependency-check": "^4.1.0",
     "faucet": "^0.0.1",
     "hallmark": "^3.1.0",
