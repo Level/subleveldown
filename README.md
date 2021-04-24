@@ -7,7 +7,7 @@
 [![Node version](https://img.shields.io/node/v/subleveldown.svg)](https://www.npmjs.com/package/subleveldown)
 [![Test](https://github.com/Level/subleveldown/actions/workflows/test.yml/badge.svg)](https://github.com/Level/subleveldown/actions/workflows/test.yml)
 [![npm](https://img.shields.io/npm/dm/subleveldown.svg?label=dl)](https://www.npmjs.com/package/subleveldown)
-[![codecov](https://codecov.io/gh/Level/level-js/branch/master/graph/badge.svg)](https://codecov.io/gh/Level/subleveldown)
+[![codecov](https://codecov.io/gh/Level/subleveldown/branch/master/graph/badge.svg)](https://codecov.io/gh/Level/subleveldown)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 [![Backers on Open Collective](https://opencollective.com/level/backers/badge.svg?color=orange)](#backers)
 [![Sponsors on Open Collective](https://opencollective.com/level/sponsors/badge.svg?color=orange)](#sponsors)
