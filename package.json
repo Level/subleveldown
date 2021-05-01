@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "abstract-leveldown": "^6.3.0",
-    "encoding-down": "^6.2.0",
+    "encoding-down": "^7.0.0",
     "inherits": "^2.0.3",
     "level-option-wrap": "^1.1.0",
     "levelup": "^4.4.0",
