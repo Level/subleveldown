@@ -6,7 +6,6 @@ updates:
       interval: monthly
     ignore:
       - dependency-name: dependency-check
-      - dependency-name: nyc
       - dependency-name: standard
   - package-ecosystem: github-actions
     directory: /
