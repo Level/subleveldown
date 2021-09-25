@@ -1,16 +1,18 @@
-var test = require('tape')
-var suite = require('abstract-leveldown/test')
-var memdown = require('memdown')
-var encoding = require('encoding-down')
-var concat = require('level-concat-iterator')
-var after = require('after')
-var subdown = require('../leveldown')
-var subdb = require('..')
-var levelup = require('levelup')
-var reachdown = require('reachdown')
-var abstract = require('abstract-leveldown')
-var inherits = require('util').inherits
-var EventEmitter = require('events')
+'use strict'
+
+const test = require('tape')
+const suite = require('abstract-leveldown/test')
+const memdown = require('memdown')
+const encoding = require('encoding-down')
+const concat = require('level-concat-iterator')
+const after = require('after')
+const subdown = require('../leveldown')
+const subdb = require('..')
+const levelup = require('levelup')
+const reachdown = require('reachdown')
+const abstract = require('abstract-leveldown')
+const inherits = require('util').inherits
+const EventEmitter = require('events')
 
 // Test abstract-leveldown compliance
 function runSuite (factory) {
@@ -44,8 +46,8 @@ runSuite(function factory () {
 
 // Test without a user-provided levelup layer
 runSuite(function factory () {
-  var down = memdown()
-  var emitter = new EventEmitter()
+  const down = memdown()
+  const emitter = new EventEmitter()
 
   if (!down.supports.deferredOpen) {
     // Simulate a future abstract-leveldown that
@@ -88,37 +90,37 @@ suite({
 // Additional tests for this implementation
 test('SubDown constructor', function (t) {
   t.test('can be called without new', function (t) {
-    var sub = subdown(levelup(memdown()))
+    const sub = subdown(levelup(memdown()))
     t.is(sub instanceof subdown, true, 'instanceof subdown')
     t.end()
   })
   t.test('missing prefix and missing separator', function (t) {
-    var sub = subdown(levelup(memdown()))
+    const sub = subdown(levelup(memdown()))
     t.is(sub.prefix, '!!')
     t.end()
   })
   t.test('prefix and missing separator', function (t) {
-    var sub = subdown(levelup(memdown()), 'prefix')
+    const sub = subdown(levelup(memdown()), 'prefix')
     t.is(sub.prefix, '!prefix!')
     t.end()
   })
   t.test('prefix and separator (as string)', function (t) {
-    var sub = subdown(levelup(memdown()), 'prefix', '%')
+    const sub = subdown(levelup(memdown()), 'prefix', '%')
     t.is(sub.prefix, '%prefix%')
     t.end()
   })
   t.test('prefix and separator (as options)', function (t) {
-    var sub = subdown(levelup(memdown()), 'prefix', { separator: '%' })
+    const sub = subdown(levelup(memdown()), 'prefix', { separator: '%' })
     t.is(sub.prefix, '%prefix%')
     t.end()
   })
   t.test('prefix with same initial character as separator is sliced', function (t) {
-    var sub = subdown(levelup(memdown()), '!prefix')
+    const sub = subdown(levelup(memdown()), '!prefix')
     t.is(sub.prefix, '!prefix!')
     t.end()
   })
   t.test('prefix with same ending character as separator is sliced', function (t) {
-    var sub = subdown(levelup(memdown()), 'prefix!')
+    const sub = subdown(levelup(memdown()), 'prefix!')
     t.is(sub.prefix, '!prefix!')
     t.end()
   })
@@ -132,14 +134,14 @@ test('SubDown constructor', function (t) {
 
 test('SubDb main function', function (t) {
   t.test('inherits manifest from parent db', function (t) {
-    var down = memdown()
+    const down = memdown()
     down.supports.foo = true
 
-    var up = levelup(down)
+    const up = levelup(down)
     t.is(up.supports.foo, true, 'levelup inherits from down')
     up.supports.bar = true
 
-    var sub = subdb(up)
+    const sub = subdb(up)
     t.is(sub.supports.foo, true, 'subdb inherits from down via levelup')
     t.is(sub.supports.seek, true, 'subdb inherits from down via levelup')
     t.is(sub.supports.bar, true, 'subdb inherits from levelup')
@@ -147,17 +149,17 @@ test('SubDb main function', function (t) {
   })
 
   t.test('does not support additionalMethods', function (t) {
-    var down = memdown()
+    const down = memdown()
     down.supports.additionalMethods.foo = true
 
     // We're expecting that levelup exposes the additionalMethod
-    var up = levelup(down)
+    const up = levelup(down)
     t.is(up.supports.additionalMethods.foo, true)
     t.is(typeof up.foo, 'function', 'levelup exposes method')
 
     // But that subdb removes it (although it is itself a levelup)
     // because it can't automatically prefix any key(-like) arguments
-    var sub = subdb(up)
+    const sub = subdb(up)
     t.same(sub.supports.additionalMethods, {})
     t.is(typeof sub.foo, 'undefined', 'subdb does not expose method')
     t.end()
@@ -175,14 +177,14 @@ test('SubDb main function', function (t) {
   t.test('error from open() does not bubble up', function (t) {
     t.plan(1)
 
-    var mockdb = mock(abstract.AbstractLevelDOWN, {
+    const mockdb = mock(abstract.AbstractLevelDOWN, {
       _open: function (opts, cb) {
         process.nextTick(cb, new Error('error from underlying store'))
       }
     })
 
-    var db = levelup(mockdb)
-    var sub = subdb(db, 'test')
+    const db = levelup(mockdb)
+    const sub = subdb(db, 'test')
 
     db.on('error', (err) => {
       t.is(err.message, 'error from underlying store')
@@ -194,8 +196,8 @@ test('SubDb main function', function (t) {
   })
 
   t.test('levelup *down is set to subdown which has correct storage', function (t) {
-    var db = levelup(memdown())
-    var sub = subdb(db, 'test')
+    const db = levelup(memdown())
+    const sub = subdb(db, 'test')
     sub.once('open', function () {
       t.is(sub.db instanceof encoding, true, 'is encoding-down instance')
       t.is(sub.db.db instanceof subdown, true, 'is subdown instance')
@@ -207,11 +209,11 @@ test('SubDb main function', function (t) {
 
   t.test('different sub levels can have different encodings', function (t) {
     t.plan(6)
-    var db = levelup(memdown())
-    var sub1 = subdb(db, 'test1', {
+    const db = levelup(memdown())
+    const sub1 = subdb(db, 'test1', {
       valueEncoding: 'json'
     })
-    var sub2 = subdb(db, 'test2', {
+    const sub2 = subdb(db, 'test2', {
       keyEncoding: 'binary',
       valueEncoding: 'binary'
     })
@@ -233,7 +235,7 @@ test('SubDb main function', function (t) {
 
   t.test('cannot create a sublevel on a closed db', function (t) {
     t.plan(4)
-    var db = levelup(memdown())
+    const db = levelup(memdown())
     db.once('open', function () {
       db.close(function (err) {
         t.error(err, 'no error')
@@ -258,7 +260,7 @@ test('SubDb main function', function (t) {
 
     levelup(memdown(), function (err, db) {
       t.ifError(err, 'no open error')
-      var sub = subdb(db, 'test')
+      const sub = subdb(db, 'test')
 
       sub.once('open', function () {
         db.close(function (err) {
@@ -278,8 +280,8 @@ test('SubDb main function', function (t) {
     levelup(memdown(), function (err, db) {
       t.ifError(err, 'no open error')
 
-      var sub = subdb(db, 'test')
-      var it = sub.iterator()
+      const sub = subdb(db, 'test')
+      const it = sub.iterator()
 
       sub.once('open', function () {
         db.close(function (err) {
@@ -309,7 +311,7 @@ test('SubDb main function', function (t) {
 
     levelup(memdown(), function (err, db) {
       t.ifError(err, 'no open error')
-      var sub = subdb(db, 'test')
+      const sub = subdb(db, 'test')
 
       sub.on('error', (err) => {
         t.is(err.message, 'Parent database is not open')
@@ -344,7 +346,7 @@ test('SubDb main function', function (t) {
         })
       })
 
-      var sub = subdb(db, 'test')
+      const sub = subdb(db, 'test')
 
       sub.on('open', function () {
         t.fail('should not open')
@@ -354,10 +356,10 @@ test('SubDb main function', function (t) {
 
   t.test('can reopen a sublevel without affecting encoding-down state of db', function (t) {
     t.plan(3)
-    var db = levelup(encoding(memdown()))
+    const db = levelup(encoding(memdown()))
 
     db.once('open', function () {
-      var sub = subdb(db, 'test')
+      const sub = subdb(db, 'test')
 
       sub.close(function (err) {
         t.ifError(err, 'no close error')
@@ -376,9 +378,9 @@ test('SubDb main function', function (t) {
   })
 
   t.test('can wrap a sublevel and reopen the wrapped sublevel', function (t) {
-    var db = levelup(memdown())
-    var sub1 = subdb(db, 'test1')
-    var sub2 = subdb(sub1, 'test2')
+    const db = levelup(memdown())
+    const sub1 = subdb(db, 'test1')
+    const sub2 = subdb(sub1, 'test2')
 
     sub2.once('open', function () {
       verify()
@@ -411,11 +413,11 @@ test('SubDb main function', function (t) {
   t.test('doubly nested sublevel has correct prefix', function (t) {
     t.plan(3)
 
-    var db = levelup(encoding(memdown()))
-    var sub1 = subdb(db, '1')
-    var sub2 = subdb(sub1, '2')
-    var sub3 = subdb(sub2, '3')
-    var next = after(3, verify)
+    const db = levelup(encoding(memdown()))
+    const sub1 = subdb(db, '1')
+    const sub2 = subdb(sub1, '2')
+    const sub3 = subdb(sub2, '3')
+    const next = after(3, verify)
 
     sub1.put('a', 'value', next)
     sub2.put('b', 'value', next)
@@ -437,11 +439,11 @@ test('SubDb main function', function (t) {
 
   t.test('iterator options are forwarded (issue #1)', function (t) {
     t.plan(4)
-    var enc = { keyEncoding: 'utf8', valueEncoding: 'json' }
-    var db = levelup(encoding(memdown(), enc))
-    var sub = subdb(db, 'test', enc)
-    var key = 'foo'
-    var value = { hello: 'world' }
+    const enc = { keyEncoding: 'utf8', valueEncoding: 'json' }
+    const db = levelup(encoding(memdown(), enc))
+    const sub = subdb(db, 'test', enc)
+    const key = 'foo'
+    const value = { hello: 'world' }
     sub.once('open', function () {
       sub.put(key, value, function () {
         db.createReadStream().on('data', function (r) {
@@ -458,9 +460,9 @@ test('SubDb main function', function (t) {
 
   t.test('concatenating Buffer keys', function (t) {
     t.plan(1)
-    var db = levelup(memdown())
-    var sub = subdb(db, 'test', { keyEncoding: 'binary' })
-    var key = Buffer.from('00ff', 'hex')
+    const db = levelup(memdown())
+    const sub = subdb(db, 'test', { keyEncoding: 'binary' })
+    const key = Buffer.from('00ff', 'hex')
     sub.once('open', function () {
       sub.put(key, 'bar', function () {
         db.createReadStream().on('data', function (r) {
@@ -472,15 +474,15 @@ test('SubDb main function', function (t) {
 
   t.test('subdb with no prefix', function (t) {
     t.plan(1)
-    var db = levelup(memdown())
-    var sub = subdb(db, { valueEncoding: 'json' })
+    const db = levelup(memdown())
+    const sub = subdb(db, { valueEncoding: 'json' })
     t.equal(sub.db._db.db.prefix, '!!')
   })
 
   t.test('errors from iterator bubble up', function (t) {
     t.plan(2)
 
-    var mockdb = mock(abstract.AbstractLevelDOWN, {
+    const mockdb = mock(abstract.AbstractLevelDOWN, {
       _iterator: function () {
         return {
           next: function (cb) {
@@ -493,8 +495,8 @@ test('SubDb main function', function (t) {
       }
     })
 
-    var sub = subdb(levelup(mockdb), 'test')
-    var it = sub.iterator()
+    const sub = subdb(levelup(mockdb), 'test')
+    const it = sub.iterator()
 
     it.next(function (err) {
       t.is(err.message, 'next() error from underlying store')
@@ -507,11 +509,11 @@ test('SubDb main function', function (t) {
   t.test('can arbitrarily seek', function (t) {
     t.plan(7)
 
-    var db = levelup(memdown())
-    var sub = subdb(db, 'sub')
+    const db = levelup(memdown())
+    const sub = subdb(db, 'sub')
 
     db.once('open', function () {
-      var it = sub.iterator({ keyAsBuffer: false, valueAsBuffer: false })
+      const it = sub.iterator({ keyAsBuffer: false, valueAsBuffer: false })
       sub.batch([
         { type: 'put', key: 'a', value: 'A' },
         { type: 'put', key: 'b', value: 'B' },
@@ -541,13 +543,13 @@ test('SubDb main function', function (t) {
   })
 
   t.test('clear (optimized)', function (t) {
-    var down = memdown()
+    const down = memdown()
     t.is(typeof down.clear, 'function', 'has clear()')
     testClear(t, down)
   })
 
   t.test('clear (with iterator-based fallback)', function (t) {
-    var down = memdown()
+    const down = memdown()
     down.clear = undefined
     testClear(t, down)
   })
@@ -612,8 +614,8 @@ test('can store any key', function (t) {
   t.test('iterating buffer keys with bytes above 196', function (t) {
     t.plan(3)
 
-    var db = levelup(memdown())
-    var sub = subdb(db, 'test', { keyEncoding: 'binary' })
+    const db = levelup(memdown())
+    const sub = subdb(db, 'test', { keyEncoding: 'binary' })
 
     sub.once('open', function () {
       const batch = sub.batch()
@@ -690,8 +692,8 @@ test('subleveldown on intermediate layer', function (t) {
     this.db._get('mitm' + key, options, callback)
   }
 
-  var db = levelup(encoding(new Intermediate(memdown())))
-  var sub = subdb(db, 'test')
+  const db = levelup(encoding(new Intermediate(memdown())))
+  const sub = subdb(db, 'test')
 
   sub.put('key', 'value', function (err) {
     t.error(err, 'no err')
@@ -719,7 +721,7 @@ function implement (ctor, methods) {
 
   inherits(Test, ctor)
 
-  for (var k in methods) {
+  for (const k in methods) {
     Test.prototype[k] = methods[k]
   }
 
@@ -727,6 +729,6 @@ function implement (ctor, methods) {
 }
 
 function mock (ctor, methods) {
-  var Test = implement(ctor, methods)
+  const Test = implement(ctor, methods)
   return new Test()
 }

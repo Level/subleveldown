@@ -1,12 +1,12 @@
-var inherits = require('inherits')
-var abstract = require('abstract-leveldown')
-var wrap = require('level-option-wrap')
-var reachdown = require('reachdown')
-var matchdown = require('./matchdown')
+const inherits = require('inherits')
+const abstract = require('abstract-leveldown')
+const wrap = require('level-option-wrap')
+const reachdown = require('reachdown')
+const matchdown = require('./matchdown')
 
-var rangeOptions = 'start end gt gte lt lte'.split(' ')
-var defaultClear = abstract.AbstractLevelDOWN.prototype._clear
-var hasOwnProperty = Object.prototype.hasOwnProperty
+const rangeOptions = 'start end gt gte lt lte'.split(' ')
+const defaultClear = abstract.AbstractLevelDOWN.prototype._clear
+const hasOwnProperty = Object.prototype.hasOwnProperty
 
 function concat (prefix, key, force) {
   if (typeof key === 'string' && (force || key.length)) return prefix + key
@@ -28,10 +28,9 @@ inherits(SubIterator, abstract.AbstractIterator)
 SubIterator.prototype._next = function (cb) {
   if (maybeError(this.db.leveldown, cb)) return
 
-  var self = this
-  this.iterator.next(function (err, key, value) {
+  this.iterator.next((err, key, value) => {
     if (err) return cb(err)
-    if (key) key = key.slice(self.prefix.length)
+    if (key) key = key.slice(this.prefix.length)
     cb(err, key, value)
   })
 }
@@ -50,15 +49,15 @@ function SubDown (db, prefix, opts) {
   if (typeof opts === 'string') opts = { separator: opts }
   if (!opts) opts = {}
 
-  var separator = opts.separator
+  let separator = opts.separator
 
   if (!prefix) prefix = ''
   if (!separator) separator = '!'
   if (prefix[0] === separator) prefix = prefix.slice(1)
   if (prefix[prefix.length - 1] === separator) prefix = prefix.slice(0, -1)
 
-  var code = separator.charCodeAt(0) + 1
-  var ceiling = String.fromCharCode(code)
+  const code = separator.charCodeAt(0) + 1
+  const ceiling = String.fromCharCode(code)
 
   Buffer.from(prefix).forEach(function (byte) {
     if (byte <= code) {
@@ -70,8 +69,7 @@ function SubDown (db, prefix, opts) {
   this.prefix = separator + prefix + separator
   this._beforeOpen = opts.open
 
-  var self = this
-  var manifest = db.supports || {}
+  let manifest = db.supports || {}
 
   // The parent db must open itself or be (re)opened by the user because a
   // sublevel can't (shouldn't) initiate state changes on the rest of the db.
@@ -79,7 +77,7 @@ function SubDown (db, prefix, opts) {
     throw new Error('Parent database must support deferredOpen')
   }
 
-  var subdb = reachdown(db, 'subleveldown')
+  const subdb = reachdown(db, 'subleveldown')
 
   if (subdb) {
     // Old subleveldown doesn't know its prefix and leveldown until opened
@@ -102,20 +100,22 @@ function SubDown (db, prefix, opts) {
   }
 
   this._wrap = {
-    gt: function (x) {
-      return concat(self.prefix, x || '', true)
+    gt: (x) => {
+      return concat(this.prefix, x || '', true)
     },
-    lt: function (x) {
+    lt: (x) => {
       if (!x || isEmptyBuffer(x)) {
-        return self.prefix.slice(0, -1) + ceiling
+        return this.prefix.slice(0, -1) + ceiling
       } else {
-        return concat(self.prefix, x)
+        return concat(this.prefix, x)
       }
     }
   }
 
-  // Inherit manifest from parent db
-  manifest = Object.assign({}, manifest, {
+  manifest = {
+    // Inherit manifest from parent db
+    ...manifest,
+
     // Disable unsupported features
     getMany: false,
     keyIterator: false,
@@ -126,7 +126,7 @@ function SubDown (db, prefix, opts) {
     // Unset additional methods (like approximateSize) which we can't support
     // here and should typically be called on the underlying store instead.
     additionalMethods: {}
-  })
+  }
 
   abstract.AbstractLevelDOWN.call(this, manifest)
 }
@@ -139,26 +139,24 @@ SubDown.prototype.type = 'subleveldown'
 // because that means we can always do operations on this.leveldown.
 // Alternatively have the sublevel follow the open state of this.db.
 SubDown.prototype._open = function (opts, cb) {
-  var self = this
-
   // TODO: make _isOpening public in levelup or add a method like
   // ready(cb) which waits for - but does not initiate - a state change.
-  var m = typeof this.db.isOpening === 'function' ? 'isOpening' : '_isOpening'
+  const m = typeof this.db.isOpening === 'function' ? 'isOpening' : '_isOpening'
+
+  const onopen = () => {
+    if (!this.db.isOpen()) return cb(new Error('Parent database is not open'))
+    if (this.leveldown.status !== 'open') return cb(new Error('Inner database is not open'))
+
+    // TODO: add hooks to abstract-leveldown
+    if (this._beforeOpen) return this._beforeOpen(cb)
+
+    cb()
+  }
 
   if (this.db[m]()) {
     this.db.once('open', onopen)
   } else {
     this._nextTick(onopen)
-  }
-
-  function onopen () {
-    if (!self.db.isOpen()) return cb(new Error('Parent database is not open'))
-    if (self.leveldown.status !== 'open') return cb(new Error('Inner database is not open'))
-
-    // TODO: add hooks to abstract-leveldown
-    if (self._beforeOpen) return self._beforeOpen(cb)
-
-    cb()
   }
 }
 
@@ -185,7 +183,7 @@ SubDown.prototype._batch = function (operations, opts, cb) {
   if (maybeError(this.leveldown, cb)) return
 
   // No need to make a copy of the array, abstract-leveldown does that
-  for (var i = 0; i < operations.length; i++) {
+  for (let i = 0; i < operations.length; i++) {
     operations[i].key = concat(this.prefix, operations[i].key)
   }
 
@@ -206,7 +204,7 @@ SubDown.prototype._clear = function (opts, cb) {
 }
 
 function addRestOptions (target, opts) {
-  for (var k in opts) {
+  for (const k in opts) {
     if (hasOwnProperty.call(opts, k) && !isRangeOption(k)) {
       target[k] = opts[k]
     }
@@ -260,7 +258,7 @@ function fixRange (opts) {
 }
 
 SubDown.prototype._iterator = function (opts) {
-  var xopts = extend(wrap(fixRange(opts), this._wrap), opts)
+  const xopts = extend(wrap(fixRange(opts), this._wrap), opts)
   return new SubIterator(this, this.leveldown.iterator(xopts), this.prefix)
 }
 
