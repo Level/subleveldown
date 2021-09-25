@@ -11,6 +11,10 @@ const defaultClear = abstract.AbstractLevelDOWN.prototype._clear
 const hasOwnProperty = Object.prototype.hasOwnProperty
 const nextTick = abstract.AbstractLevelDOWN.prototype._nextTick
 
+const kIterator = Symbol('iterator')
+const kPrefix = Symbol('prefix')
+const kBeforeOpen = Symbol('beforeOpen')
+
 function concat (prefix, key, force) {
   if (typeof key === 'string' && (force || key.length)) return prefix + key
   if (Buffer.isBuffer(key) && (force || key.length)) {
@@ -20,8 +24,8 @@ function concat (prefix, key, force) {
 }
 
 function SubIterator (db, ite, prefix) {
-  this.iterator = ite
-  this.prefix = prefix
+  this[kIterator] = ite
+  this[kPrefix] = prefix
 
   abstract.AbstractIterator.call(this, db)
 }
@@ -31,20 +35,20 @@ inherits(SubIterator, abstract.AbstractIterator)
 SubIterator.prototype._next = function (cb) {
   if (maybeError(this.db.leveldown, cb)) return
 
-  this.iterator.next((err, key, value) => {
+  this[kIterator].next((err, key, value) => {
     if (err) return cb(err)
-    if (key) key = key.slice(this.prefix.length)
+    if (key) key = key.slice(this[kPrefix].length)
     cb(err, key, value)
   })
 }
 
 SubIterator.prototype._seek = function (key) {
-  this.iterator.seek(concat(this.prefix, key))
+  this[kIterator].seek(concat(this[kPrefix], key))
 }
 
 SubIterator.prototype._end = function (cb) {
   if (maybeError(this.db.leveldown, cb)) return
-  this.iterator.end(cb)
+  this[kIterator].end(cb)
 }
 
 function SubDown (db, prefix, opts) {
@@ -70,7 +74,7 @@ function SubDown (db, prefix, opts) {
 
   this.db = db
   this.prefix = separator + prefix + separator
-  this._beforeOpen = opts.open
+  this[kBeforeOpen] = opts.open
 
   let manifest = db.supports || {}
 
@@ -151,7 +155,7 @@ SubDown.prototype._open = function (opts, cb) {
     if (this.leveldown.status !== 'open') return cb(new Error('Inner database is not open'))
 
     // TODO: add hooks to abstract-leveldown
-    if (this._beforeOpen) return this._beforeOpen(cb)
+    if (this[kBeforeOpen]) return this[kBeforeOpen](cb)
 
     cb()
   }
