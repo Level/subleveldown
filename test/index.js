@@ -19,7 +19,6 @@ function runSuite (factory) {
     factory: factory,
 
     // Unsupported features
-    seek: false,
     createIfMissing: false,
     errorIfExists: false,
 
@@ -73,7 +72,6 @@ suite({
     return subdb(levelup(encoding(memdown())), 'test')
   },
   // Unsupported features
-  seek: false,
   createIfMissing: false,
   errorIfExists: false,
 
@@ -133,6 +131,38 @@ test('SubDown constructor', function (t) {
 })
 
 test('SubDb main function', function (t) {
+  t.test('inherits manifest from parent db', function (t) {
+    var down = memdown()
+    down.supports.foo = true
+
+    var up = levelup(down)
+    t.is(up.supports.foo, true, 'levelup inherits from down')
+    up.supports.bar = true
+
+    var sub = subdb(up)
+    t.is(sub.supports.foo, true, 'subdb inherits from down via levelup')
+    t.is(sub.supports.seek, true, 'subdb inherits from down via levelup')
+    t.is(sub.supports.bar, true, 'subdb inherits from levelup')
+    t.end()
+  })
+
+  t.test('does not support additionalMethods', function (t) {
+    var down = memdown()
+    down.supports.additionalMethods.foo = true
+
+    // We're expecting that levelup exposes the additionalMethod
+    var up = levelup(down)
+    t.is(up.supports.additionalMethods.foo, true)
+    t.is(typeof up.foo, 'function', 'levelup exposes method')
+
+    // But that subdb removes it (although it is itself a levelup)
+    // because it can't automatically prefix any key(-like) arguments
+    var sub = subdb(up)
+    t.same(sub.supports.additionalMethods, {})
+    t.is(typeof sub.foo, 'undefined', 'subdb does not expose method')
+    t.end()
+  })
+
   t.test('opts.open hook', function (t) {
     t.plan(1)
     subdb(levelup(memdown()), 'test', {

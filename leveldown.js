@@ -114,7 +114,21 @@ function SubDown (db, prefix, opts) {
     }
   }
 
-  abstract.AbstractLevelDOWN.call(this)
+  // Inherit manifest from parent db
+  manifest = Object.assign({}, manifest, {
+    // Disable unsupported features
+    getMany: false,
+    keyIterator: false,
+    valueIterator: false,
+    iteratorNextv: false,
+    iteratorAll: false,
+
+    // Unset additional methods (like approximateSize) which we can't support
+    // here and should typically be called on the underlying store instead.
+    additionalMethods: {}
+  })
+
+  abstract.AbstractLevelDOWN.call(this, manifest)
 }
 
 inherits(SubDown, abstract.AbstractLevelDOWN)
