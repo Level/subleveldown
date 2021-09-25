@@ -13,6 +13,7 @@ const reachdown = require('reachdown')
 const abstract = require('abstract-leveldown')
 const inherits = require('util').inherits
 const EventEmitter = require('events')
+const nextTick = subdown.prototype._nextTick
 
 // Test abstract-leveldown compliance
 function runSuite (factory) {
@@ -179,7 +180,7 @@ test('SubDb main function', function (t) {
 
     const mockdb = mock(abstract.AbstractLevelDOWN, {
       _open: function (opts, cb) {
-        process.nextTick(cb, new Error('error from underlying store'))
+        nextTick(cb, new Error('error from underlying store'))
       }
     })
 
@@ -337,16 +338,16 @@ test('SubDb main function', function (t) {
 
       db.close(function (err) {
         t.ifError(err, 'no close error')
-        t.is(reachdown(sub, 'subleveldown').status, 'opening')
+        t.is(reachdown(sub, 'subleveldown').status, 'new')
         t.is(reachdown(sub).status, 'closed')
-
-        sub.on('error', (err) => {
-          t.is(err.message, 'Parent database is not open')
-          t.is(reachdown(sub, 'subleveldown').status, 'new')
-        })
       })
 
       const sub = subdb(db, 'test')
+
+      sub.on('error', (err) => {
+        t.is(err.message, 'Parent database is not open')
+        t.is(reachdown(sub, 'subleveldown').status, 'new')
+      })
 
       sub.on('open', function () {
         t.fail('should not open')
@@ -486,10 +487,10 @@ test('SubDb main function', function (t) {
       _iterator: function () {
         return {
           next: function (cb) {
-            process.nextTick(cb, new Error('next() error from underlying store'))
+            nextTick(cb, new Error('next() error from underlying store'))
           },
           end: function (cb) {
-            process.nextTick(cb, new Error('end() error from underlying store'))
+            nextTick(cb, new Error('end() error from underlying store'))
           }
         }
       }

@@ -2,7 +2,32 @@
 
 This document describes breaking changes and how to upgrade. For a complete list of changes including minor and patch releases, please refer to the [changelog](CHANGELOG.md).
 
-## v5
+## Upcoming
+
+Legacy range options have been removed ([Level/community#86](https://github.com/Level/community/issues/86)). If you previously did:
+
+```js
+db.createReadStream({ start: 'a', end: 'z' })
+```
+
+An error would now be thrown and you must instead do:
+
+```js
+db.createReadStream({ gte: 'a', lte: 'z' })
+```
+
+The same applies to `db.iterator()`, `db.createKeyStream()` and `db.createValueStream()`.
+
+This release also drops support of legacy runtime environments ([Level/community#98](https://github.com/Level/community/issues/98)):
+
+- Node.js 6 and 8
+- Internet Explorer 11
+- Safari 9-11
+- Stock Android browser (AOSP).
+
+Lastly, in browsers, `process.nextTick()` has been replaced with [`queue-microtask`](https://github.com/feross/queue-microtask), except in streams.
+
+## 5.0.0
 
 ### Fixes iterating buffer keys that contain bytes 196-255 ([#88](https://github.com/level/subleveldown/issues/88))
 
@@ -57,7 +82,7 @@ subdb(db, 'example').on('error', function (err) {
 db.close(function () {})
 ```
 
-## v4
+## 4.0.0
 
 Upgraded to `abstract-leveldown@6`, `encoding-down@6` and `levelup@4`. We recommend to pair `subleveldown@4` with `level` >= 5 or when using a custom store, one that is based on `abstract-leveldown` >= 6. For details please see:
 
@@ -66,7 +91,7 @@ Upgraded to `abstract-leveldown@6`, `encoding-down@6` and `levelup@4`. We recomm
 
 A quick summary: range options are now serialized the same as keys, `db.iterator({ gt: undefined })` is not the same as `db.iterator({})`, nullish values are now rejected and streams are backed by [`readable-stream@3`](https://github.com/nodejs/readable-stream#version-3xx).
 
-## v3
+## 3.0.0
 
 Dropped support for node 4.
 

@@ -1,12 +1,15 @@
+'use strict'
+
 const inherits = require('inherits')
 const abstract = require('abstract-leveldown')
 const wrap = require('level-option-wrap')
 const reachdown = require('reachdown')
 const matchdown = require('./matchdown')
 
-const rangeOptions = 'start end gt gte lt lte'.split(' ')
+const rangeOptions = ['gt', 'gte', 'lt', 'lte']
 const defaultClear = abstract.AbstractLevelDOWN.prototype._clear
 const hasOwnProperty = Object.prototype.hasOwnProperty
+const nextTick = abstract.AbstractLevelDOWN.prototype._nextTick
 
 function concat (prefix, key, force) {
   if (typeof key === 'string' && (force || key.length)) return prefix + key
@@ -228,19 +231,15 @@ function maybeError (leveldown, callback) {
   if (leveldown.status !== 'open') {
     // Same error message as levelup
     // TODO: use require('level-errors').ReadError
-    process.nextTick(callback, new Error('Database is not open'))
+    nextTick(callback, new Error('Database is not open'))
     return true
   }
 
   return false
 }
 
-function fixRange (opts) {
-  return (!opts.reverse || (!opts.end && !opts.start)) ? opts : { start: opts.end, end: opts.start }
-}
-
 SubDown.prototype._iterator = function (opts) {
-  const xopts = addRestOptions(wrap(fixRange(opts), this._wrap), opts)
+  const xopts = addRestOptions(wrap(opts, this._wrap), opts)
   return new SubIterator(this, this.leveldown.iterator(xopts), this.prefix)
 }
 
