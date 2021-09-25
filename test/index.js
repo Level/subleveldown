@@ -331,14 +331,13 @@ test('SubDb main function', function (t) {
   })
 
   t.test('cannot create sublevel while db is closing', function (t) {
-    t.plan(6)
+    t.plan(5)
 
     levelup(memdown(), function (err, db) {
       t.ifError(err, 'no open error')
 
       db.close(function (err) {
         t.ifError(err, 'no close error')
-        t.is(reachdown(sub, 'subleveldown').status, 'new')
         t.is(reachdown(sub).status, 'closed')
       })
 

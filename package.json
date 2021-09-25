@@ -7,6 +7,7 @@
   "main": "index.js",
   "scripts": {
     "test": "standard && hallmark && (nyc -s node test | faucet) && nyc report",
+    "test-browsers-local": "airtap test/index.js",
     "coverage": "nyc report -r lcovonly",
     "hallmark": "hallmark --fix",
     "dependency-check": "dependency-check --no-dev .",
@@ -25,6 +26,8 @@
   },
   "devDependencies": {
     "after": "^0.8.2",
+    "airtap": "^4.0.3",
+    "airtap-playwright": "^1.0.1",
     "dependency-check": "^4.1.0",
     "faucet": "^0.0.1",
     "hallmark": "^3.1.0",

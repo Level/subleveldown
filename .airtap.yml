@@ -1,0 +1,7 @@
+providers:
+  - airtap-playwright
+
+browsers:
+  - name: chromium
+  - name: webkit
+  - name: firefox
