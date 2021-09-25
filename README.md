@@ -34,12 +34,12 @@
 **If you are upgrading:** please see [UPGRADING.md](UPGRADING.md).
 
 ```js
-var sub = require('subleveldown')
-var level = require('level')
+const sub = require('subleveldown')
+const level = require('level')
 
-var db = level('db')
-var example = sub(db, 'example')
-var nested = sub(example, 'nested')
+const db = level('db')
+const example = sub(db, 'example')
+const nested = sub(example, 'nested')
 ```
 
 The `example` and `nested` db's are just regular [`levelup`][levelup] instances:
@@ -47,10 +47,31 @@ The `example` and `nested` db's are just regular [`levelup`][levelup] instances:
 ```js
 example.put('hello', 'world', function () {
   nested.put('hi', 'welt', function () {
-    // will print {key:'hello', value:'world'}
-    example.createReadStream().on('data', console.log)
+    // Prints { key: 'hi', value: 'welt' }
+    nested.createReadStream().on('data', console.log)
   })
 })
+```
+
+Or with promises and iterators:
+
+```js
+await example.put('hello', 'world')
+await nested.put('hi', 'welt')
+
+for await (const [key, value] of nested.iterator()) {
+  // Prints ['hi', 'welt']
+  console.log([key, value])
+}
+```
+
+Sublevels see their own keys as well as keys of any nested sublevels:
+
+```js
+// Prints:
+// { key: '!nested!hi', value: 'welt' }
+// { key: 'hello', value: 'world' }
+example.createReadStream().on('data', console.log)
 ```
 
 They also support `db.clear()` which is very useful to empty a bucket of stuff:
@@ -61,7 +82,7 @@ example.clear(function (err) {})
 // Or delete a range within `example`
 example.clear({ gt: 'hello' }, function (err) {})
 
-// For believers
+// With promises
 await example.clear()
 ```
 
