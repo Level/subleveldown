@@ -235,30 +235,12 @@ function maybeError (leveldown, callback) {
   return false
 }
 
-// TODO (refactor): use addRestOptions instead
-function extend (xopts, opts) {
-  xopts.keys = opts.keys
-  xopts.values = opts.values
-  xopts.createIfMissing = opts.createIfMissing
-  xopts.errorIfExists = opts.errorIfExists
-  xopts.keyEncoding = opts.keyEncoding
-  xopts.valueEncoding = opts.valueEncoding
-  xopts.compression = opts.compression
-  xopts.db = opts.db
-  xopts.limit = opts.limit
-  xopts.keyAsBuffer = opts.keyAsBuffer
-  xopts.valueAsBuffer = opts.valueAsBuffer
-  xopts.reverse = opts.reverse
-  xopts.fillCache = opts.fillCache
-  return xopts
-}
-
 function fixRange (opts) {
   return (!opts.reverse || (!opts.end && !opts.start)) ? opts : { start: opts.end, end: opts.start }
 }
 
 SubDown.prototype._iterator = function (opts) {
-  const xopts = extend(wrap(fixRange(opts), this._wrap), opts)
+  const xopts = addRestOptions(wrap(fixRange(opts), this._wrap), opts)
   return new SubIterator(this, this.leveldown.iterator(xopts), this.prefix)
 }
 
