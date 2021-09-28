@@ -25,8 +25,9 @@ function runSuite (factory) {
     createIfMissing: false,
     errorIfExists: false,
 
-    // Opt-in to new clear() tests
-    clear: true
+    // Opt-in to new tests
+    clear: true,
+    getMany: true
   })
 }
 
@@ -56,6 +57,7 @@ runSuite(function factory () {
     down.supports.deferredOpen = true
     down.isOpen = function () { return this.status === 'open' }
     down.isOpening = function () { return this.status === 'opening' }
+    down._isOperational = () => this.status === 'opening'
     down.once = emitter.once.bind(emitter)
     down.open(function (err) {
       if (err) throw err
@@ -78,10 +80,12 @@ suite({
   createIfMissing: false,
   errorIfExists: false,
 
-  // Opt-in to new clear() tests
+  // Opt-in to new tests
   clear: true,
+  getMany: true,
 
   // Adapt for levelup
+  deferredOpen: true,
   promises: true,
   status: false,
   serialize: false,
