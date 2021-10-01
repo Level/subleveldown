@@ -1,55 +1,55 @@
 # Changelog
 
-_**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
-
 ## [5.0.1] - 2020-06-26
 
 ### Added
 
-- Run `abstract-leveldown` tests on `levelup` interface ([#90](https://github.com/level/subleveldown/issues/90)) ([`8928189`](https://github.com/level/subleveldown/commit/8928189)) ([**@vweevers**](https://github.com/vweevers))
+- Run `abstract-leveldown` tests on `levelup` interface ([#90](https://github.com/Level/subleveldown/issues/90)) ([`8928189`](https://github.com/Level/subleveldown/commit/8928189)) ([**@vweevers**](https://github.com/vweevers))
 
 ### Fixed
 
-- Don't mutate arguments object, which fails in strict mode ([#93](https://github.com/level/subleveldown/issues/93)) ([`5513c83`](https://github.com/level/subleveldown/commit/5513c83)) ([**@andymatuschak**](https://github.com/andymatuschak))
+- Don't mutate arguments object, which fails in strict mode ([#93](https://github.com/Level/subleveldown/issues/93)) ([`5513c83`](https://github.com/Level/subleveldown/commit/5513c83)) ([**@andymatuschak**](https://github.com/andymatuschak))
 
 ## [5.0.0] - 2020-04-05
 
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md)._
+
 ### Changed
 
-- **Breaking:** parent db must support deferredOpen ([#89](https://github.com/level/subleveldown/issues/89)) ([**@vweevers**](https://github.com/vweevers))
-- Upgrade `dependency-check` devDependency from `^3.3.0` to `^4.1.0` ([`b47f991`](https://github.com/level/subleveldown/commit/b47f991)) ([**@vweevers**](https://github.com/vweevers))
+- **Breaking:** parent db must support deferredOpen ([#89](https://github.com/Level/subleveldown/issues/89)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `dependency-check` devDependency from `^3.3.0` to `^4.1.0` ([`b47f991`](https://github.com/Level/subleveldown/commit/b47f991)) ([**@vweevers**](https://github.com/vweevers))
 
 ### Fixed
 
-- **Breaking:** fix iterating buffer keys that contain bytes 196-255 ([#88](https://github.com/level/subleveldown/issues/88)) ([**@vweevers**](https://github.com/vweevers))
+- **Breaking:** fix iterating buffer keys that contain bytes 196-255 ([#88](https://github.com/Level/subleveldown/issues/88)) ([**@vweevers**](https://github.com/vweevers))
 
 ## [4.1.4] - 2019-10-08
 
 ### Fixed
 
-- Fix double prefixes ([#81](https://github.com/level/subleveldown/issues/81)) ([**@vweevers**](https://github.com/vweevers))
-- Fix `open()` test ([#80](https://github.com/level/subleveldown/issues/80)) ([**@vweevers**](https://github.com/vweevers))
+- Fix double prefixes ([#81](https://github.com/Level/subleveldown/issues/81)) ([**@vweevers**](https://github.com/vweevers))
+- Fix `open()` test ([#80](https://github.com/Level/subleveldown/issues/80)) ([**@vweevers**](https://github.com/vweevers))
 
 ## [4.1.3] - 2019-09-17
 
 ### Changed
 
-- Use `reachdown` package ([Level/community#82](https://github.com/Level/community/issues/82)) ([#75](https://github.com/level/subleveldown/issues/75)) ([**@vweevers**](https://github.com/vweevers))
+- Use `reachdown` package ([Level/community#82](https://github.com/Level/community/issues/82)) ([#75](https://github.com/Level/subleveldown/issues/75)) ([**@vweevers**](https://github.com/vweevers))
 
 ## [4.1.2] - 2019-09-12
 
 ### Changed
 
-- Upgrade `standard` devDependency from `^13.0.1` to `^14.0.0` ([#71](https://github.com/level/subleveldown/issues/71)) ([**@vweevers**](https://github.com/vweevers))
-- Upgrade `hallmark` devDependency from `^1.0.0` to `^2.0.0` ([#72](https://github.com/level/subleveldown/issues/72)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `standard` devDependency from `^13.0.1` to `^14.0.0` ([#71](https://github.com/Level/subleveldown/issues/71)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `hallmark` devDependency from `^1.0.0` to `^2.0.0` ([#72](https://github.com/Level/subleveldown/issues/72)) ([**@vweevers**](https://github.com/vweevers))
 
 ### Removed
 
-- Remove outdated `example.js` ([`3ef72c9`](https://github.com/level/subleveldown/commit/3ef72c9)) ([**@vweevers**](https://github.com/vweevers))
+- Remove outdated `example.js` ([`3ef72c9`](https://github.com/Level/subleveldown/commit/3ef72c9)) ([**@vweevers**](https://github.com/vweevers))
 
 ### Fixed
 
-- Polish `clear()` ([#74](https://github.com/level/subleveldown/issues/74)) ([**@vweevers**](https://github.com/vweevers))
+- Polish `clear()` ([#74](https://github.com/Level/subleveldown/issues/74)) ([**@vweevers**](https://github.com/vweevers))
   - Bump `levelup`, `abstract-leveldown` and `encoding-down` to prevent dedupe
   - Opt-in to new `clear()` tests
   - Prefer optimized implementation of `clear()`
@@ -58,53 +58,55 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
 ### Changed
 
-- Upgrade `memdown` devDependency from `^4.0.0` to `^5.0.0` ([#70](https://github.com/level/subleveldown/issues/70)) ([**@vweevers**](https://github.com/vweevers))
-- Upgrade `hallmark` devDependency from `^0.1.0` to `^1.0.0` ([#68](https://github.com/level/subleveldown/issues/68)) ([**@vweevers**](https://github.com/vweevers))
-- Upgrade `standard` devDependency from `^12.0.1` to `^13.0.1` ([#67](https://github.com/level/subleveldown/issues/67)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `memdown` devDependency from `^4.0.0` to `^5.0.0` ([#70](https://github.com/Level/subleveldown/issues/70)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `hallmark` devDependency from `^0.1.0` to `^1.0.0` ([#68](https://github.com/Level/subleveldown/issues/68)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `standard` devDependency from `^12.0.1` to `^13.0.1` ([#67](https://github.com/Level/subleveldown/issues/67)) ([**@vweevers**](https://github.com/vweevers))
 
 ### Fixed
 
-- Relax `isAbstract()` check ([`fbbf525`](https://github.com/level/subleveldown/commit/fbbf525)) ([**@vweevers**](https://github.com/vweevers))
+- Relax `isAbstract()` check ([`fbbf525`](https://github.com/Level/subleveldown/commit/fbbf525)) ([**@vweevers**](https://github.com/vweevers))
 
 ## [4.1.0] - 2019-06-28
 
 ### Changed
 
-- Upgrade `nyc` devDependency from `^13.3.0` to `^14.0.0` ([#63](https://github.com/level/subleveldown/issues/63)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `nyc` devDependency from `^13.3.0` to `^14.0.0` ([#63](https://github.com/Level/subleveldown/issues/63)) ([**@vweevers**](https://github.com/vweevers))
 
 ### Added
 
-- Support seeking ([#66](https://github.com/level/subleveldown/issues/66)) ([**@MeirionHughes**](https://github.com/MeirionHughes))
+- Support seeking ([#66](https://github.com/Level/subleveldown/issues/66)) ([**@MeirionHughes**](https://github.com/MeirionHughes))
 
 ## [4.0.0] - 2019-04-06
 
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md)._
+
 ### Changed
 
-- Upgrade `abstract-leveldown` from `^5.0.0` to `^6.0.2` ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
-- Upgrade `encoding-down` from `^5.0.3` to `^6.0.1` ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
-- Upgrade `levelup` from `^3.0.1` to `^4.0.1` ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
-- Avoid unnecessary copy of batch operations ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
-- Invoke abstract tests from single function ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
-- Add mandatory `db` argument to abstract iterator ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
-- Upgrade `memdown` devDependency from `^3.0.0` to `^4.0.0` ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
-- Upgrade `nyc` devDependency from `^12.0.2` to `^13.3.0` ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
-- Upgrade `standard` devDependency from `^11.0.1` to `^12.0.1` ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
-- Apply common project tweaks ([#58](https://github.com/level/subleveldown/issues/58), [#59](https://github.com/level/subleveldown/issues/59)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `abstract-leveldown` from `^5.0.0` to `^6.0.2` ([#61](https://github.com/Level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `encoding-down` from `^5.0.3` to `^6.0.1` ([#61](https://github.com/Level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `levelup` from `^3.0.1` to `^4.0.1` ([#61](https://github.com/Level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Avoid unnecessary copy of batch operations ([#61](https://github.com/Level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Invoke abstract tests from single function ([#61](https://github.com/Level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Add mandatory `db` argument to abstract iterator ([#61](https://github.com/Level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `memdown` devDependency from `^3.0.0` to `^4.0.0` ([#61](https://github.com/Level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `nyc` devDependency from `^12.0.2` to `^13.3.0` ([#61](https://github.com/Level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Upgrade `standard` devDependency from `^11.0.1` to `^12.0.1` ([#61](https://github.com/Level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Apply common project tweaks ([#58](https://github.com/Level/subleveldown/issues/58), [#59](https://github.com/Level/subleveldown/issues/59)) ([**@vweevers**](https://github.com/vweevers))
 
 ### Added
 
-- Test that errors from `open()` and iterators bubble up ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
-- Test without a user-provided `levelup` layer ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
-- Gitignore `coverage` directory ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Test that errors from `open()` and iterators bubble up ([#61](https://github.com/Level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Test without a user-provided `levelup` layer ([#61](https://github.com/Level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Gitignore `coverage` directory ([#61](https://github.com/Level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
 
 ### Removed
 
-- Remove obsolete `_batch()` checks ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
-- Remove dummy location from `abstract-leveldown` constructor call ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Remove obsolete `_batch()` checks ([#61](https://github.com/Level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Remove dummy location from `abstract-leveldown` constructor call ([#61](https://github.com/Level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
 
 ### Fixed
 
-- Serialize non-buffer keys to strings ([#61](https://github.com/level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
+- Serialize non-buffer keys to strings ([#61](https://github.com/Level/subleveldown/issues/61)) ([**@vweevers**](https://github.com/vweevers))
 
 ## [3.0.1] - 2018-07-27
 
@@ -121,6 +123,8 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 - Pass on `fillCache` option to `SubIterator` ([**@Nocory**](https://github.com/Nocory))
 
 ## [3.0.0] - 2018-06-07
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md)._
 
 ### Added
 
@@ -249,42 +253,42 @@ _**If you are upgrading:** please see [`UPGRADING.md`](UPGRADING.md)._
 
 :seedling: Initial release.
 
-[5.0.1]: https://github.com/level/subleveldown/compare/v5.0.0...v5.0.1
+[5.0.1]: https://github.com/Level/subleveldown/releases/tag/v5.0.1
 
-[5.0.0]: https://github.com/level/subleveldown/compare/v4.1.4...v5.0.0
+[5.0.0]: https://github.com/Level/subleveldown/releases/tag/v5.0.0
 
-[4.1.4]: https://github.com/level/subleveldown/compare/v4.1.3...v4.1.4
+[4.1.4]: https://github.com/Level/subleveldown/releases/tag/v4.1.4
 
-[4.1.3]: https://github.com/level/subleveldown/compare/v4.1.2...v4.1.3
+[4.1.3]: https://github.com/Level/subleveldown/releases/tag/v4.1.3
 
-[4.1.2]: https://github.com/level/subleveldown/compare/v4.1.1...v4.1.2
+[4.1.2]: https://github.com/Level/subleveldown/releases/tag/v4.1.2
 
-[4.1.1]: https://github.com/level/subleveldown/compare/v4.1.0...v4.1.1
+[4.1.1]: https://github.com/Level/subleveldown/releases/tag/v4.1.1
 
-[4.1.0]: https://github.com/level/subleveldown/compare/v4.0.0...v4.1.0
+[4.1.0]: https://github.com/Level/subleveldown/releases/tag/v4.1.0
 
-[4.0.0]: https://github.com/level/subleveldown/compare/v3.0.1...v4.0.0
+[4.0.0]: https://github.com/Level/subleveldown/releases/tag/v4.0.0
 
-[3.0.1]: https://github.com/level/subleveldown/compare/v3.0.0...v3.0.1
+[3.0.1]: https://github.com/Level/subleveldown/releases/tag/v3.0.1
 
-[3.0.0]: https://github.com/level/subleveldown/compare/v3.0.0-rc1...v3.0.0
+[3.0.0]: https://github.com/Level/subleveldown/releases/tag/v3.0.0
 
-[3.0.0-rc1]: https://github.com/level/subleveldown/compare/v2.1.0...v3.0.0-rc1
+[3.0.0-rc1]: https://github.com/Level/subleveldown/releases/tag/v3.0.0-rc1
 
-[2.1.0]: https://github.com/level/subleveldown/compare/v2.0.0...v2.1.0
+[2.1.0]: https://github.com/Level/subleveldown/releases/tag/v2.1.0
 
-[2.0.0]: https://github.com/level/subleveldown/compare/v1.1.0...v2.0.0
+[2.0.0]: https://github.com/Level/subleveldown/releases/tag/v2.0.0
 
-[1.1.0]: https://github.com/level/subleveldown/compare/v1.0.6...v1.1.0
+[1.1.0]: https://github.com/Level/subleveldown/releases/tag/v1.1.0
 
-[1.0.6]: https://github.com/level/subleveldown/compare/v1.0.5...v1.0.6
+[1.0.6]: https://github.com/Level/subleveldown/releases/tag/v1.0.6
 
-[1.0.5]: https://github.com/level/subleveldown/compare/v1.0.4...v1.0.5
+[1.0.5]: https://github.com/Level/subleveldown/releases/tag/v1.0.5
 
-[1.0.4]: https://github.com/level/subleveldown/compare/v1.0.3...v1.0.4
+[1.0.4]: https://github.com/Level/subleveldown/releases/tag/v1.0.4
 
-[1.0.3]: https://github.com/level/subleveldown/compare/v1.0.2...v1.0.3
+[1.0.3]: https://github.com/Level/subleveldown/releases/tag/v1.0.3
 
-[1.0.2]: https://github.com/level/subleveldown/compare/v1.0.1...v1.0.2
+[1.0.2]: https://github.com/Level/subleveldown/releases/tag/v1.0.2
 
-[1.0.1]: https://github.com/level/subleveldown/compare/v1.0.0...v1.0.1
+[1.0.1]: https://github.com/Level/subleveldown/releases/tag/v1.0.1

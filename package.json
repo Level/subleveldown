@@ -13,9 +13,13 @@
     "dependency-check": "dependency-check --no-dev .",
     "prepublishOnly": "npm run dependency-check"
   },
-  "directories": {
-    "test": "test"
-  },
+  "files": [
+    "index.js",
+    "leveldown.js",
+    "matchdown.js",
+    "CHANGELOG.md",
+    "UPGRADING.md"
+  ],
   "dependencies": {
     "abstract-leveldown": "^7.2.0",
     "encoding-down": "^7.1.0",
@@ -31,23 +35,19 @@
     "dependency-check": "^4.1.0",
     "faucet": "^0.0.1",
     "hallmark": "^3.1.0",
-    "level-community": "^3.0.0",
     "level-concat-iterator": "^3.0.0",
     "memdown": "^6.1.0",
     "nyc": "^15.1.0",
     "standard": "^16.0.3",
     "tape": "^5.0.1"
   },
-  "hallmark": {
-    "community": "level-community"
-  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/level/subleveldown.git"
+    "url": "https://github.com/Level/subleveldown.git"
   },
-  "homepage": "https://github.com/level/subleveldown",
+  "homepage": "https://github.com/Level/subleveldown",
   "bugs": {
-    "url": "https://github.com/level/subleveldown/issues"
+    "url": "https://github.com/Level/subleveldown/issues"
   },
   "keywords": [
     "level"
