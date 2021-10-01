@@ -123,8 +123,11 @@ function SubDown (db, prefix, opts) {
     // Inherit manifest from parent db
     ...manifest,
 
+    // We support this on the levelup interface, but not on the
+    // abstract-leveldown interface.
+    deferredOpen: false,
+
     // Disable unsupported features
-    getMany: false,
     keyIterator: false,
     valueIterator: false,
     iteratorNextv: false,
@@ -144,13 +147,12 @@ SubDown.prototype.type = 'subleveldown'
 
 // TODO: remove _open() once abstract-leveldown supports deferredOpen,
 // because that means we can always do operations on this.leveldown.
-// Alternatively have the sublevel follow the open state of this.db.
 SubDown.prototype._open = function (opts, cb) {
-  // TODO: make _isOpening public in levelup or add a method like
-  // ready(cb) which waits for - but does not initiate - a state change.
+  // TODO: start using db.status (added to levelup recently) in a next major.
   const m = typeof this.db.isOpening === 'function' ? 'isOpening' : '_isOpening'
 
   const onopen = () => {
+    // TODO: start using db.status (added to levelup recently) in a next major.
     if (!this.db.isOpen()) return cb(new Error('Parent database is not open'))
     if (this.leveldown.status !== 'open') return cb(new Error('Inner database is not open'))
 
@@ -179,6 +181,12 @@ SubDown.prototype._put = function (key, value, opts, cb) {
 SubDown.prototype._get = function (key, opts, cb) {
   if (maybeError(this.leveldown, cb)) return
   this.leveldown.get(concat(this.prefix, key), opts, cb)
+}
+
+SubDown.prototype._getMany = function (keys, opts, cb) {
+  // maybeError is not necessary here, abstract-leveldown does that
+  keys = keys.map(key => concat(this.prefix, key))
+  this.leveldown.getMany(keys, opts, cb)
 }
 
 SubDown.prototype._del = function (key, opts, cb) {
@@ -235,7 +243,7 @@ function maybeError (leveldown, callback) {
   if (leveldown.status !== 'open') {
     // Same error message as levelup
     // TODO: use require('level-errors').ReadError
-    nextTick(callback, new Error('Database is not open'))
+    ;(leveldown._nextTick || nextTick)(callback, new Error('Database is not open'))
     return true
   }
 

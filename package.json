@@ -17,11 +17,11 @@
     "test": "test"
   },
   "dependencies": {
-    "abstract-leveldown": "^7.1.0",
-    "encoding-down": "^7.0.0",
+    "abstract-leveldown": "^7.2.0",
+    "encoding-down": "^7.1.0",
     "inherits": "^2.0.3",
     "level-option-wrap": "^1.1.0",
-    "levelup": "^5.0.1",
+    "levelup": "^5.1.0",
     "reachdown": "^1.1.0"
   },
   "devDependencies": {
@@ -33,7 +33,7 @@
     "hallmark": "^3.1.0",
     "level-community": "^3.0.0",
     "level-concat-iterator": "^3.0.0",
-    "memdown": "^6.0.0",
+    "memdown": "^6.1.0",
     "nyc": "^15.1.0",
     "standard": "^16.0.3",
     "tape": "^5.0.1"
