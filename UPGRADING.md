@@ -2,7 +2,7 @@
 
 This document describes breaking changes and how to upgrade. For a complete list of changes including minor and patch releases, please refer to the [changelog](CHANGELOG.md).
 
-## Upcoming
+## 6.0.0
 
 Legacy range options have been removed ([Level/community#86](https://github.com/Level/community/issues/86)). If you previously did:
 
@@ -25,7 +25,7 @@ This release also drops support of legacy runtime environments ([Level/community
 - Safari 9-11
 - Stock Android browser (AOSP).
 
-Lastly, in browsers, `process.nextTick()` has been replaced with [`queue-microtask`](https://github.com/feross/queue-microtask), except in streams.
+Some private properties have been replaced with Symbols ([`1f9d550`](https://github.com/Level/subleveldown/commit/1f9d550)). Lastly, in browsers, `process.nextTick()` has been replaced with [`queue-microtask`](https://github.com/feross/queue-microtask), except in streams.
 
 ## 5.0.0
 

@@ -1,5 +1,26 @@
 # Changelog
 
+## [6.0.0] - 2021-10-01
+
+_If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md)._
+
+### Changed
+
+- **Breaking:** bump `abstract-leveldown`, `encoding-down`, `levelup` ([`60bd660`](https://github.com/Level/subleveldown/commit/60bd660)) (Vincent Weevers)
+- **Breaking:** hide private properties with Symbol ([`1f9d550`](https://github.com/Level/subleveldown/commit/1f9d550)) (Vincent Weevers)
+- Refactor: use `addRestOptions()` for iterator ([`717066e`](https://github.com/Level/subleveldown/commit/717066e)) (Vincent Weevers)
+- Modernize syntax and bump standard ([`0bd41cc`](https://github.com/Level/subleveldown/commit/0bd41cc)) (Vincent Weevers)
+
+### Added
+
+- Add `db.getMany(keys)` ([#107](https://github.com/Level/subleveldown/issues/107)) ([`0ff2b68`](https://github.com/Level/subleveldown/commit/0ff2b68)) (Vincent Weevers)
+- Add manifest ([Level/community#83](https://github.com/Level/community/issues/83)) ([`f7ee1e3`](https://github.com/Level/subleveldown/commit/f7ee1e3)) (Vincent Weevers)
+- Clarify scope of keys in README examples ([`58a628a`](https://github.com/Level/subleveldown/commit/58a628a)) (Vincent Weevers)
+
+### Removed
+
+- **Breaking:** drop Node.js 6 and 8 ([`ab713d1`](https://github.com/Level/subleveldown/commit/ab713d1)) (Vincent Weevers).
+
 ## [5.0.1] - 2020-06-26
 
 ### Added
@@ -249,9 +270,11 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md)._
 
 - Forward all iterator options ([**@mafintosh**](https://github.com/mafintosh))
 
-## 1.0.0 - 2014-12-23
+## [1.0.0] - 2014-12-23
 
 :seedling: Initial release.
+
+[6.0.0]: https://github.com/Level/subleveldown/releases/tag/v6.0.0
 
 [5.0.1]: https://github.com/Level/subleveldown/releases/tag/v5.0.1
 
@@ -292,3 +315,5 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md)._
 [1.0.2]: https://github.com/Level/subleveldown/releases/tag/v1.0.2
 
 [1.0.1]: https://github.com/Level/subleveldown/releases/tag/v1.0.1
+
+[1.0.0]: https://github.com/Level/subleveldown/releases/tag/v1.0.0
