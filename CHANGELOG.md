@@ -1,5 +1,11 @@
 # Changelog
 
+## [6.0.1] - 2021-10-02
+
+### Fixed
+
+- Bump `levelup` to fix API parity with `abstract-leveldown` ([`bd73ace`](https://github.com/Level/subleveldown/commit/bd73ace)) (Vincent Weevers).
+
 ## [6.0.0] - 2021-10-01
 
 _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md)._
@@ -273,6 +279,8 @@ _If you are upgrading: please see [`UPGRADING.md`](UPGRADING.md)._
 ## [1.0.0] - 2014-12-23
 
 :seedling: Initial release.
+
+[6.0.1]: https://github.com/Level/subleveldown/releases/tag/v6.0.1
 
 [6.0.0]: https://github.com/Level/subleveldown/releases/tag/v6.0.0
 
