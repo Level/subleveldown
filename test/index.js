@@ -87,7 +87,7 @@ suite({
   // Adapt for levelup
   deferredOpen: true,
   promises: true,
-  status: false,
+  status: true,
   serialize: false,
   encodings: true
 })
