@@ -686,6 +686,10 @@ test('subleveldown on intermediate layer', function (t) {
 
   inherits(Intermediate, abstract.AbstractLevelDOWN)
 
+  Intermediate.prototype._open = function (options, callback) {
+    this.db.open(callback)
+  }
+
   Intermediate.prototype._put = function (key, value, options, callback) {
     t.pass('got _put call')
     this.db._put('mitm' + key, value, options, callback)
