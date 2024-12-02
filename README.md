@@ -1,15 +1,6 @@
 # subleveldown
 
-> Split a [`levelup`][levelup] database into _sublevels_ with their own keyspace, encoding and events.
-
-[![level badge][level-badge]](https://github.com/Level/awesome)
-[![npm](https://img.shields.io/npm/v/subleveldown.svg)](https://www.npmjs.com/package/subleveldown)
-[![Node version](https://img.shields.io/node/v/subleveldown.svg)](https://www.npmjs.com/package/subleveldown)
-[![Test](https://img.shields.io/github/workflow/status/Level/subleveldown/Test?label=test)](https://github.com/Level/subleveldown/actions/workflows/test.yml)
-[![Coverage](https://img.shields.io/codecov/c/github/Level/subleveldown?label=&logo=codecov&logoColor=fff)](https://codecov.io/gh/Level/subleveldown)
-[![Standard](https://img.shields.io/badge/standard-informational?logo=javascript&logoColor=fff)](https://standardjs.com)
-[![Common Changelog](https://common-changelog.org/badge.svg)](https://common-changelog.org)
-[![Donate](https://img.shields.io/badge/donate-orange?logo=open-collective&logoColor=fff)](https://opencollective.com/level)
+**Superseded by [`abstract-level`](https://github.com/Level/abstract-level). Please see [Frequently Asked Questions](https://github.com/Level/community#faq).**
 
 ## Table of Contents
 
